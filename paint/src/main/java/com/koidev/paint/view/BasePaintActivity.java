@@ -47,9 +47,7 @@ public abstract class BasePaintActivity extends AppCompatActivity implements IBa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(getLayoutResId());
-
         initToolbar();
         populateView();
     }

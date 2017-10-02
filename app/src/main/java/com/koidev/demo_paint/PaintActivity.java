@@ -21,10 +21,14 @@ public class PaintActivity extends BasePaintActivity {
 
     @Override
     protected void initPaintFragment() {
+        if (getSupportFragmentManager().findFragmentByTag("paint") != null) {
+            return;
+        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(
                 R.id.fragment_container,
-                PaintFragment.newInstance()
+                PaintFragment.newInstance(),
+                "paint"
         ).commit();
     }
 

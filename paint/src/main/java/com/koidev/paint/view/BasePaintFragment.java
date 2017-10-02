@@ -47,6 +47,7 @@ public abstract class BasePaintFragment extends Fragment implements IBasePaint.V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setRetainInstance(true);
         setHasOptionsMenu(true);
         mPresenter = new BasePaintPresenter(getActivity().getApplicationContext(), this);

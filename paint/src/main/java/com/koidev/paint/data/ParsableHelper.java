@@ -15,8 +15,11 @@ public class ParsableHelper implements Parcelable  {
 
     public ArrayList<MotionEvent> events;
 
-    public ParsableHelper(ArrayList<MotionEvent> events) {
+    public Parcelable parcelable;
+
+    public ParsableHelper(ArrayList<MotionEvent> events, Parcelable parcelable) {
         this.events = events;
+        this.parcelable = parcelable;
     }
 
     @Override
@@ -27,10 +30,12 @@ public class ParsableHelper implements Parcelable  {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.events);
+        dest.writeParcelable(parcelable, flags);
     }
 
     protected ParsableHelper(Parcel in) {
         this.events = in.createTypedArrayList(MotionEvent.CREATOR);
+        this.parcelable = in.readParcelable(ClassLoader.getSystemClassLoader());
     }
 
     public static final Parcelable.Creator<ParsableHelper> CREATOR = new Parcelable.Creator<ParsableHelper>() {

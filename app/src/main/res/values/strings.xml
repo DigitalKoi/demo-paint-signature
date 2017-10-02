@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">demo-paint</string>
+
+    <string name="button_library_video">Paint</string>
+
+    <string name="demo_message">This app demonstrates an example of our custom paint for Android.</string>
+    <string name="demo_message_contact_us">You like it? Contact us <a href="https://www.facebook.com/mobiledevpro/">#MobileDevPro</a></string>
+    <string name="app_title_set_signature">Paint</string>
+
+</resources>

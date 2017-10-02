@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">paint</string>
+
+    <string name="action_select_save">Save</string>
+    <string name="action_select_clear">Clear</string>
+
+    <string name="dialog_title_request_permission">Request permission</string>
+    <string name="message_need_permission_external_storage">Need to allow access for read/write data in external storage</string>
+</resources>

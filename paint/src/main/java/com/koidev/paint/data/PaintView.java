@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 
 public class PaintView extends View {
+
+    private ArrayList<MotionEvent> cachedEvents = new ArrayList<>();
     private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>(100);
 
     // To hold the path that will be drawn.
@@ -75,6 +77,11 @@ public class PaintView extends View {
         super.onDraw(canvas);
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
+
+        for (MotionEvent event : cachedEvents) {
+            performTouchEvent(event);
+        }
+        cachedEvents.clear();
     }
 
     private void touch_start(float x, float y) {
@@ -146,20 +153,13 @@ public class PaintView extends View {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        super.onSaveInstanceState();
-        return new ParsableHelper(eventList);
+        return new ParsableHelper(eventList,super.onSaveInstanceState());
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         ParsableHelper helper = (ParsableHelper) state;
-        ArrayList<MotionEvent> events = helper.events;
-        if (drawCanvas != null) {
-            for (MotionEvent event : events) {
-                performTouchEvent(event);
-            }
-            return;
-        }
-        super.onRestoreInstanceState(state);
+        cachedEvents = helper.events;
+        super.onRestoreInstanceState(helper.parcelable);
     }
 }

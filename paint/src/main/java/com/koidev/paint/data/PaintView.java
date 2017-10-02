@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -149,27 +148,20 @@ public class PaintView extends View {
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_STATE, super.onSaveInstanceState());
-        bundle.putParcelableArrayList(EXTRA_EVENT_LIST, eventList);
-
-        return bundle;
+        super.onSaveInstanceState();
+        return new ParsableHelper(eventList);
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            super.onRestoreInstanceState(bundle.getParcelable(EXTRA_STATE));
-            ArrayList<MotionEvent> eventList = bundle.getParcelableArrayList(EXTRA_EVENT_LIST);
-            if (eventList == null) {
-                eventList = new ArrayList<MotionEvent>(100);
-            }
-            for (MotionEvent event : eventList) {
+        ParsableHelper helper = (ParsableHelper) state;
+        ArrayList<MotionEvent> events = helper.events;
+        if (drawCanvas != null) {
+            for (MotionEvent event : events) {
                 performTouchEvent(event);
             }
             return;
         }
+        super.onRestoreInstanceState(state);
     }
 }

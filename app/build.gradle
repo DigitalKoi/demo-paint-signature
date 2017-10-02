@@ -26,5 +26,4 @@ dependencies {
     // Butterknife
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
     compile project(':paint')
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

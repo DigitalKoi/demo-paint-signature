@@ -11,11 +11,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.PaintView;
 
 import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * @author KoiDev
@@ -108,15 +111,26 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
             String imgSaved = MediaStore.Images.Media.insertImage(
                     mContext.getContentResolver(), paintView.getDrawingCache(),
                     UUID.randomUUID().toString() + ".png", "drawing");
-
+            Log.d(TAG, "saveSignature: " + imgSaved);
             //TODO: change directory for saving img
             PackageManager m = mContext.getPackageManager();
             String s = mContext.getPackageName();
             PackageInfo p = m.getPackageInfo(s, 0);
-            s = p.applicationInfo.dataDir;
+            s = p.applicationInfo.dataDir /*+ "/" + UUID.randomUUID().toString() + ".png"*/;
+            Log.d(TAG, "saveSignature: " + s);
+
+            int i;
+//            try {
+//                paintView.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(new File(s)));
+//                mView.showToast("Drawing saved to Gallery! " + s);
+//                Log.d(TAG, "saveSignature: " + s);
+//            } catch (Exception e) {
+//                Log.e("saveSignature: ", e.toString() + " " + s);
+//                mView.showToast("Oops! Image could not be saved.");
+//            }
 
             if (imgSaved != null) {
-                mView.showToast("Drawing saved to Gallery! " + s);
+                mView.showToast("Drawing saved to Gallery! " + imgSaved);
             } else {
                 mView.showToast("Oops! Image could not be saved.");
             }

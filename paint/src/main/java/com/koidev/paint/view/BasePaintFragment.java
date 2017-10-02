@@ -58,14 +58,9 @@ public abstract class BasePaintFragment extends Fragment implements IBasePaint.V
         View view = inflater.inflate(R.layout.fragment_base_paint, container, false);
 
         mPaintView = (PaintView) view.findViewById(R.id.canvas_paint);
-//        mPaintView.setId(mPaintView.generateViewId());
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
 
     @Override
     public void onStart() {

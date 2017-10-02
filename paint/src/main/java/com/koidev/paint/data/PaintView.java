@@ -23,8 +23,6 @@ import java.util.ArrayList;
 
 public class PaintView extends View {
     private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>(100);
-    private static final String EXTRA_EVENT_LIST = "event_list";
-    private static final String EXTRA_STATE = "instance_state";
 
     // To hold the path that will be drawn.
     private Path drawPath;

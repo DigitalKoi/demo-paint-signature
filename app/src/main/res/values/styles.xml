@@ -28,7 +28,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <!-- Toolbar title. Fix for same size on landscape and portrait modes-->
-    <style name="AppTheme.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="AppTheme.ToolbarTitle" parent="">
         <item name="android:textSize">20sp</item>
     </style>
 

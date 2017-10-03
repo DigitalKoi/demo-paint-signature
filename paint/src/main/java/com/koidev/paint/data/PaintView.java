@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class PaintView extends View {
 
     private ArrayList<MotionEvent> cachedEvents = new ArrayList<>();
-    private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>(100);
+    private ArrayList<MotionEvent> eventList = new ArrayList<MotionEvent>();
 
     // To hold the path that will be drawn.
     private Path drawPath;
@@ -75,6 +75,7 @@ public class PaintView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //TODO: handle the output with the rotation of the screen
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
 
@@ -148,12 +149,13 @@ public class PaintView extends View {
 
     public void clearCanvas() {
         drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+        eventList.clear();
         invalidate();
     }
 
     @Override
     protected Parcelable onSaveInstanceState() {
-        return new ParsableHelper(eventList,super.onSaveInstanceState());
+        return new ParsableHelper(eventList, super.onSaveInstanceState());
     }
 
     @Override

@@ -114,6 +114,9 @@ public abstract class BasePaintFragment extends Fragment implements IBasePaint.V
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
+        if (i == android.R.id.home) {
+            getActivity().onBackPressed();
+        }
         if (i == R.id.action_select_save) {
             try {
                 saveCanvas();
@@ -139,4 +142,7 @@ public abstract class BasePaintFragment extends Fragment implements IBasePaint.V
         Toast.makeText(getContext(),
                 message, Toast.LENGTH_SHORT).show();
     }
+
+
+
 }

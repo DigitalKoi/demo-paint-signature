@@ -1,24 +1,25 @@
 package com.koidev.paint.presenter;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.provider.MediaStore;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.PaintView;
+import com.koidev.paint.view.BasePaintActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.UUID;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * @author KoiDev
@@ -28,10 +29,11 @@ import static android.content.ContentValues.TAG;
 public class BasePaintPresenter implements IBasePaint.Presenter {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
+    private static final int REQUEST_CODE_PAINT = 1001;
     private Context mContext;
     private IBasePaint.View mView;
 
-    public BasePaintPresenter(Context context, IBasePaint.View view){
+    public BasePaintPresenter(Context context, IBasePaint.View view) {
         mView = view;
         mContext = context;
     }
@@ -41,9 +43,11 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
         checkDeviceStoragePermission();
     }
 
-    @Override
-    public void onStopView() {
-
+    private void onSelectPhoto(String fileUrl) {
+        Activity activity = mView.getActivity();
+        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
+        intent.putExtra(BasePaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        activity.setResult(Activity.RESULT_OK, intent);
     }
 
     @Override
@@ -108,31 +112,22 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
         if (checkDeviceStoragePermission()) {
             //save drawing
             paintView.setDrawingCacheEnabled(true);
-            String imgSaved = MediaStore.Images.Media.insertImage(
-                    mContext.getContentResolver(), paintView.getDrawingCache(),
-                    UUID.randomUUID().toString() + ".png", "drawing");
-            Log.d(TAG, "saveSignature: " + imgSaved);
-            //TODO: change directory for saving img
-            PackageManager m = mContext.getPackageManager();
-            String s = mContext.getPackageName();
-            PackageInfo p = m.getPackageInfo(s, 0);
-            s = p.applicationInfo.dataDir /*+ "/" + UUID.randomUUID().toString() + ".png"*/;
-            Log.d(TAG, "saveSignature: " + s);
+            try {
+                String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
+                fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+                File img = new File(fileUrl);
+                if (img.createNewFile()) {
+                    FileOutputStream out = new FileOutputStream(img);
+                    Bitmap bitmap = paintView.getDrawingCache();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+//                    mView.showToast("Drawing saved to Gallery! " + fileUrl);
+                    onSelectPhoto(fileUrl);
+                } else {
+//                    mView.showToast("Ops! Not saved signature!");
+                }
 
-            int i;
-//            try {
-//                paintView.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(new File(s)));
-//                mView.showToast("Drawing saved to Gallery! " + s);
-//                Log.d(TAG, "saveSignature: " + s);
-//            } catch (Exception e) {
-//                Log.e("saveSignature: ", e.toString() + " " + s);
-//                mView.showToast("Oops! Image could not be saved.");
-//            }
-
-            if (imgSaved != null) {
-                mView.showToast("Drawing saved to Gallery! " + imgSaved);
-            } else {
-                mView.showToast("Oops! Image could not be saved.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             // Destroy the current cache.
             paintView.destroyDrawingCache();

@@ -23,11 +23,8 @@ public interface IBasePaint {
     interface Presenter {
         void onStartView();
 
-        void onStopView();
-
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
-        //TODO: this
         boolean checkDeviceStoragePermission();
 
         void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException;

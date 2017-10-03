@@ -27,6 +27,7 @@ import android.widget.Toast;
 public abstract class BasePaintActivity extends AppCompatActivity implements IBasePaintActivity {
 
     private static final String EXTRA_KEY_LAUNCH_FRAGMENT = "key.launch.fragment";
+    public static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";
     public static final int EXTRA_KEY_PAINT = 1;
     private ActionBar mActionBar;
 

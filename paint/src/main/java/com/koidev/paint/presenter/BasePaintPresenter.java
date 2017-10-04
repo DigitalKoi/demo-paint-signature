@@ -48,6 +48,7 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
         Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
         intent.putExtra(BasePaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
         activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 
     @Override
@@ -120,10 +121,9 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
                     FileOutputStream out = new FileOutputStream(img);
                     Bitmap bitmap = paintView.getDrawingCache();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-//                    mView.showToast("Drawing saved to Gallery! " + fileUrl);
                     onSelectPhoto(fileUrl);
                 } else {
-//                    mView.showToast("Ops! Not saved signature!");
+                    mView.showToast("Ops! Not saved signature!");
                 }
 
             } catch (Exception e) {

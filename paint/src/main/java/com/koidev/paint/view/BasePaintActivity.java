@@ -31,9 +31,6 @@ public abstract class BasePaintActivity extends AppCompatActivity implements IBa
     public static final int EXTRA_KEY_PAINT = 1;
     private ActionBar mActionBar;
 
-
-    private BasePaintFragment mFragment;
-
     @LayoutRes
     protected abstract int getLayoutResId();
 

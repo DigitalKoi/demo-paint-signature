@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Brush sizes -->
-    <integer name="medium_size">20</integer>
+    <integer name="medium_size">10</integer>
 </resources>

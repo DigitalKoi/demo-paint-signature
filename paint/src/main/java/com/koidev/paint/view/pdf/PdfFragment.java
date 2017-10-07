@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koidev.paint.R;
 import com.koidev.paint.presenter.IPdf;
@@ -114,7 +115,15 @@ public class PdfFragment extends Fragment implements IPdf.View {
             getActivity().onBackPressed();
         }
         if (i == R.id.action_done) {
-           //TODO: save pdf
+            if (mPresenter.checkDeviceStoragePermission()) {
+                //TODO: save pdf
+            } else {
+                Toast.makeText(
+                        getContext(),
+                        "For saving PDF document need permission for write in storage card",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
             return true;
         } else {
             return true;

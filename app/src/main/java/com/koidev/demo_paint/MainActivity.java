@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPaint() {
-//        Intent intent = new Intent(this, PaintActivity.class);
-//        intent.putExtra(PaintActivity.EXTRA_KEY_LAUNCH_FRAGMENT, PaintActivity.EXTRA_KEY_PAINT);
-//        startActivityForResult(intent, REQUEST_CODE_PAINT);
+        Intent intent = new Intent(this, PaintActivity.class);
+        intent.putExtra(PaintActivity.EXTRA_KEY_LAUNCH_FRAGMENT, PaintActivity.EXTRA_KEY_PAINT);
+        startActivityForResult(intent, REQUEST_CODE_PAINT);
         PdfManager.getInstance().startPdf(
                 this,
                 R.style.AppTheme_NoActionBar /*Theme Resource ID (optional)*/,

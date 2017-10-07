@@ -27,7 +27,7 @@ import com.koidev.paint.presenter.IBasePaint;
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class BasePaintFragment extends Fragment implements IBasePaint.View {
+public abstract class PaintFragment extends Fragment implements IBasePaint.View {
 
     private IBasePaint.Presenter mPresenter;
     private PaintView mPaintView;

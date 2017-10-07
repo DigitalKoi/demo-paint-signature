@@ -1,13 +1,11 @@
 package com.koidev.demo_paint;
 
-import com.koidev.paint.view.paint.BasePaintFragment;
-
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
  */
 
-public class PaintFragment extends BasePaintFragment {
+public class PaintFragment extends com.koidev.paint.view.paint.PaintFragment {
 
     public static PaintFragment newInstance() {
         return new PaintFragment();

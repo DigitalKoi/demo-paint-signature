@@ -24,7 +24,7 @@ import android.widget.Toast;
  * @email DevSteelKoi@gmail.com
  */
 
-public abstract class BasePaintActivity extends AppCompatActivity implements IBasePaintActivity {
+public abstract class PaintActivity extends AppCompatActivity implements IBasePaintActivity {
 
     private static final String EXTRA_KEY_LAUNCH_FRAGMENT = "key.launch.fragment";
     public static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";

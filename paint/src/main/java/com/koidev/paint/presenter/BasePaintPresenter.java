@@ -15,7 +15,7 @@ import android.support.v7.app.AlertDialog;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.PaintView;
-import com.koidev.paint.view.paint.BasePaintActivity;
+import com.koidev.paint.view.paint.PaintActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +46,7 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
     private void onSelectPhoto(String fileUrl) {
         Activity activity = mView.getActivity();
         Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
-        intent.putExtra(BasePaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        intent.putExtra(PaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }

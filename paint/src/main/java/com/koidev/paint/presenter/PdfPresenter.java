@@ -3,6 +3,7 @@ package com.koidev.paint.presenter;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.koidev.paint.R;
+import com.koidev.paint.view.paint.PaintActivity;
 
 /**
  * @author KoiDev
@@ -19,6 +21,7 @@ import com.koidev.paint.R;
 
 public class PdfPresenter implements IPdf.Presenter {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
+    private static final String EXTRA_KEY_PAINT_SIGN = "key.launch.number.sign";
 
     private Context mContext;
     private IPdf.View mView;
@@ -29,7 +32,9 @@ public class PdfPresenter implements IPdf.Presenter {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -82,6 +87,8 @@ public class PdfPresenter implements IPdf.Presenter {
 
     @Override
     public void callPaintActivity(int keySignFirst) {
-//        Intent intent = new Intent(mContext, )
+        Intent intent = new Intent(mContext, PaintActivity.class);
+        intent.putExtra(EXTRA_KEY_PAINT_SIGN, keySignFirst);
+        mContext.startActivity(intent);
     }
 }

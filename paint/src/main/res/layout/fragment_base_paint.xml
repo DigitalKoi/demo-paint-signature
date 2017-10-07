@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.koidev.paint.view.BasePaintFragment">
+             tools:context="com.koidev.paint.view.paint.BasePaintFragment">
 
     <com.koidev.paint.data.PaintView
         android:id="@+id/canvas_paint"

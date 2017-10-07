@@ -2,4 +2,5 @@
 <resources>
     <!-- Brush sizes -->
     <integer name="medium_size">10</integer>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

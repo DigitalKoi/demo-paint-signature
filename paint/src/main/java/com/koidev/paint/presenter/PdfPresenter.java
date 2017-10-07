@@ -1,12 +1,9 @@
 package com.koidev.paint.presenter;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -14,41 +11,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import com.koidev.paint.R;
-import com.koidev.paint.data.PaintView;
-import com.koidev.paint.view.paint.BasePaintActivity;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.UUID;
 
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
  */
 
-public class BasePaintPresenter implements IBasePaint.Presenter {
-
+public class PdfPresenter implements IPdf.Presenter {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    private static final int REQUEST_CODE_PAINT = 1001;
-    private Context mContext;
-    private IBasePaint.View mView;
 
-    public BasePaintPresenter(Context context, IBasePaint.View view) {
+    private Context mContext;
+    private IPdf.View mView;
+
+    public PdfPresenter(Context context, IPdf.View view) {
         mView = view;
         mContext = context;
-    }
-
-    @Override
-    public void onStartView() {
-        checkDeviceStoragePermission();
-    }
-
-    private void onSelectPhoto(String fileUrl) {
-        Activity activity = mView.getActivity();
-        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
-        intent.putExtra(BasePaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
-        activity.setResult(Activity.RESULT_OK, intent);
-        activity.finish();
     }
 
     @Override
@@ -56,17 +33,12 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
         switch (requestCode) {
             case REQUEST_CODE_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onStartView();
+                    //TODO something
                 }
                 break;
         }
     }
 
-    /**
-     * Check local storage permission for Android 6+
-     *
-     * @return True - access is allowed
-     */
     @Override
     public boolean checkDeviceStoragePermission() {
         boolean isAccessAllowed =
@@ -109,35 +81,7 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
     }
 
     @Override
-    public void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException {
-        if (checkDeviceStoragePermission()) {
-            //save drawing
-            paintView.setDrawingCacheEnabled(true);
-            try {
-                String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
-                fileUrl += "/" + UUID.randomUUID().toString() + ".png";
-                File img = new File(fileUrl);
-                if (img.createNewFile()) {
-                    FileOutputStream out = new FileOutputStream(img);
-                    Bitmap bitmap = paintView.getDrawingCache();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    onSelectPhoto(fileUrl);
-                } else {
-                    mView.showToast("Ops! Not saved signature!");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // Destroy the current cache.
-            paintView.destroyDrawingCache();
-        } else {
-            mView.showToast("Not permission for write file");
-        }
-    }
-
-    @Override
-    public void clearCanvasView(PaintView paintView) {
-        paintView.clearCanvas();
+    public void callPaintActivity(int keySignFirst) {
+//        Intent intent = new Intent(mContext, )
     }
 }

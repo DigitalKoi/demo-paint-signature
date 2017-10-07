@@ -1,4 +1,4 @@
-package com.koidev.paint.view;
+package com.koidev.paint.view.paint;
 
 import android.content.Context;
 import android.content.Intent;

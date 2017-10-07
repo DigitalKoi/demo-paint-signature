@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_pdf"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:orientation="vertical"
+    tools:context="com.koidev.paint.view.pdf.PdfFragment">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+        >
+
+            <TextView
+                android:id="@+id/text_form_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/user1_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_form_tv_pdf"
+                android:layout_marginTop="8dp"
+                android:text="@string/test_user"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <View
+                android:id="@+id/view1_tv_pdf"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/user1_tv_pdf"
+                android:background="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/customers_text_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view1_tv_pdf"
+                android:text="@string/customers_name"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/sign1_text_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customers_text_tv_pdf"
+                android:layout_marginTop="8dp"
+                android:text="@string/signature"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/sign1_ed_tv_pdf"
+                android:text="______________"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/user2_tv_pdf"
+                android:layout_toEndOf="@+id/sign1_text_tv_pdf"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/user2_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sign1_text_tv_pdf"
+                android:layout_marginTop="8dp"
+                android:text="@string/test_spouses"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <View
+                android:id="@+id/view2_tv_pdf"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/user2_tv_pdf"
+                android:background="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/spouses_text_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view2_tv_pdf"
+                android:text="@string/spouses_name"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/sign2_text_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spouses_text_tv_pdf"
+                android:layout_marginTop="8dp"
+                android:text="@string/signature"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/sign2_ed_tv_pdf"
+                android:text="______________"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/resid_tv_pdf"
+                android:layout_toEndOf="@+id/sign2_text_tv_pdf"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/resid_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sign2_text_tv_pdf"
+                android:layout_marginTop="16dp"
+                android:text="@string/residing_in"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+
+            <TextView
+                android:id="@+id/date_text_tv_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/resid_tv_pdf"
+                android:text="@string/date"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+            />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

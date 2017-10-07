@@ -7,4 +7,27 @@
     <string name="demo_message_contact_us">You like it? Contact us <a href="https://www.facebook.com/mobiledevpro/">#MobileDevPro</a></string>
     <string name="app_title_set_signature">Paint</string>
 
+    <string name="text_form">
+        I grant to @companyName ("Company") and Company\'s assigns, licensees and
+        successors, with respect to video/film/photographic/digital images and audio recordings
+        taken of me, the right to use my image/likeness and/or name in all forms and media
+        including composite or modified representations for all purposes, including publicity,
+        advertising, trade or any commercial purpose throughout the world and in perpetuity.
+        I waive the right to inspect or approve versions of my image used for publication or
+        the written copy that may used in connection with the images. I also give my full and
+        complete permission, without compensation or limitation to the Company to take, record,
+        publish, display or obtain testimonials or other statements from me in any media, by any means,
+        methods including, but not limited to,advertising, marketing and promotional materials.
+        I understand and agree that the Statements may be used, reproduced, re-used, altered,
+        modified, edited or changed with or without identifying me and my affiliation. I hereby release
+        and discharge the Company from any and all claims, and demands arising out of or in
+        connection with the use of above-referenced images and/or audio recordings. This authorization
+        and release shall also ensure to the benefit of the legal representatives, advertising agencies,
+        media outlets, subcontractors, licensees, assigns and nominees of the Company. I further
+        relinquish all rights to use any of the above-referenced images or audio recordings for my
+        own purposes.
+        \n\nI have read and understood this agreement and I am over the age of 18.
+        \n\nI have the legal right to consent to and do consent to the terms and conditions of this release.
+    </string>
+
 </resources>

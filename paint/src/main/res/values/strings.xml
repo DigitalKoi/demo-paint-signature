@@ -5,5 +5,16 @@
     <string name="action_select_clear">Clear</string>
 
     <string name="dialog_title_request_permission">Request permission</string>
-    <string name="message_need_permission_external_storage">Need to allow access for read/write data in external storage</string>
+    <string name="message_need_permission_external_storage">Need to allow access for read/write data
+        in external storage
+    </string>
+    <string name="title_activity_pdf">PdfForm</string>
+    <string name="action_done">Done</string>
+    <string name="signature">Signature:</string>
+    <string name="customers_name">Customer\'s name</string>
+    <string name="spouses_name">Spouse\'s name</string>
+    <string name="test_user">Test User</string>
+    <string name="test_spouses">Test Spouse</string>
+    <string name="residing_in">Residing in:</string>
+    <string name="date">Date:</string>
 </resources>

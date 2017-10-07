@@ -1,4 +1,4 @@
-package com.koidev.paint.view;
+package com.koidev.paint.view.paint;
 
 
 import android.app.Activity;
@@ -106,8 +106,6 @@ public abstract class BasePaintFragment extends Fragment implements IBasePaint.V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_paint, menu);
-        //TODO: change caps
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 

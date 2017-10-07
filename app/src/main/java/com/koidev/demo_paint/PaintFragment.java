@@ -1,6 +1,6 @@
 package com.koidev.demo_paint;
 
-import com.koidev.paint.view.BasePaintFragment;
+import com.koidev.paint.view.paint.BasePaintFragment;
 
 /**
  * @author KoiDev

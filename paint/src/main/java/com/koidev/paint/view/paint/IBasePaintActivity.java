@@ -1,4 +1,4 @@
-package com.koidev.paint.view;
+package com.koidev.paint.view.paint;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;

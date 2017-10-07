@@ -2,7 +2,7 @@ package com.koidev.demo_paint;
 
 import android.support.v4.app.FragmentTransaction;
 
-import com.koidev.paint.view.BasePaintActivity;
+import com.koidev.paint.view.paint.BasePaintActivity;
 
 public class PaintActivity extends BasePaintActivity {
 

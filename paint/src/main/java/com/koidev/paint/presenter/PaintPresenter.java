@@ -7,33 +7,36 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.PaintView;
-import com.koidev.paint.view.paint.PaintActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
+
+import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
  */
 
-public class BasePaintPresenter implements IBasePaint.Presenter {
+public class PaintPresenter implements IPaint.Presenter {
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    private static final int REQUEST_CODE_PAINT = 1001;
+    public static final int REQUEST_CODE_PAINT = 1001;
     private Context mContext;
-    private IBasePaint.View mView;
+    private IPaint.View mView;
 
-    public BasePaintPresenter(Context context, IBasePaint.View view) {
+    public PaintPresenter(Context context, IPaint.View view) {
         mView = view;
         mContext = context;
     }
@@ -46,7 +49,7 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
     private void onSelectPhoto(String fileUrl) {
         Activity activity = mView.getActivity();
         Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
-        intent.putExtra(PaintActivity.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -139,5 +142,21 @@ public class BasePaintPresenter implements IBasePaint.Presenter {
     @Override
     public void clearCanvasView(PaintView paintView) {
         paintView.clearCanvas();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PAINT:
+                if (requestCode == Activity.RESULT_OK || data != null) {
+                    Bundle extras = data.getExtras();
+                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
+                    Log.d("TAG", "onActivityResult: " + fileUrl);
+
+                    break;
+                } else {
+                    return;
+                }
+        }
     }
 }

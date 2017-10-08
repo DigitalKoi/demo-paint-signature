@@ -41,7 +41,7 @@ public class PdfActivity extends AppCompatActivity {
     private void initFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PdfFragment pdfFragment = PdfFragment.newInstance(stTextForm);
-        ft.add(R.id.container, pdfFragment);
+        ft.add(R.id.container_pdf, pdfFragment);
         ft.commit();
     }
 
@@ -73,7 +73,7 @@ public class PdfActivity extends AppCompatActivity {
     private void initView() {
         //setup actionbar
         if (mThemeId > 0) {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_pdf);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
                 ActionBar actionBar = getSupportActionBar();
@@ -87,4 +87,5 @@ public class PdfActivity extends AppCompatActivity {
             }
         }
     }
+
 }

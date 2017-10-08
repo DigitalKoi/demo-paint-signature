@@ -1,6 +1,7 @@
 package com.koidev.paint.presenter;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,11 @@ import android.support.v7.app.AlertDialog;
 
 import com.koidev.paint.R;
 import com.koidev.paint.view.paint.PaintActivity;
+import com.koidev.paint.view.pdf.PdfManager;
+
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
 
 /**
  * @author KoiDev
@@ -87,8 +93,14 @@ public class PdfPresenter implements IPdf.Presenter {
 
     @Override
     public void callPaintActivity(int keySignFirst) {
+        Activity activity = mView.getActivity();
         Intent intent = new Intent(mContext, PaintActivity.class);
         intent.putExtra(EXTRA_KEY_PAINT_SIGN, keySignFirst);
+        intent.putExtra(KEY_APP_THEME_RES_ID, PdfManager.getInstance().getThemeResId());
+        intent.putExtra(KEY_APPBAR_HOME_ICON_RES_ID, PdfManager.getInstance().getAppbarHomeIconResId());
+        intent.putExtra(KEY_APPBAR_TITLE_RES_ID, PdfManager.getInstance().getAppbarTitleResId());
         mContext.startActivity(intent);
+
+
     }
 }

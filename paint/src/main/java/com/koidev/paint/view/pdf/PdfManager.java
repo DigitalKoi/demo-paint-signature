@@ -7,6 +7,8 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
+import com.koidev.paint.view.paint.PaintActivity;
+
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
@@ -14,7 +16,10 @@ import android.support.v4.app.Fragment;
 
 public class PdfManager implements IPdfManager {
 
-    public static final int REQUEST_CODE_START_PDF = 5555;
+    @StyleRes int mThemeResId;
+    @StringRes int mAppbarTitleResId;
+
+    @DrawableRes int mAppbarHomeIconResId;
 
     private static PdfManager sManager;
 
@@ -32,13 +37,15 @@ public class PdfManager implements IPdfManager {
                          @StringRes int appbarTitleResId,
                          @DrawableRes int appbarHomeIconResId,
                          String textForm) {
+
+        setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
         Intent intent = new Intent(fragment.getActivity(), PdfActivity.class);
 
         if (themeResId > 0) intent.putExtra(PdfActivity.KEY_APP_THEME_RES_ID, themeResId);
         if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
         if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
         if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
-        fragment.startActivityForResult(intent, REQUEST_CODE_START_PDF);
+        fragment.startActivity(intent);
     }
 
     @Override
@@ -47,14 +54,34 @@ public class PdfManager implements IPdfManager {
                          @StringRes int appbarTitleResId,
                          @DrawableRes int appbarHomeIconResId,
                          String textForm) {
-        Intent intent = new Intent(activity, PdfActivity.class);
+        setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
+        Intent intent = new Intent(activity, PaintActivity.class);
 
         if (themeResId > 0) intent.putExtra(PdfActivity.KEY_APP_THEME_RES_ID, themeResId);
         if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
         if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
         if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
-        activity.startActivityForResult(intent, REQUEST_CODE_START_PDF);
+        activity.startActivity(intent);
     }
 
     //TODO: callback
+
+    private void setViewStyle(@StyleRes int themeResId, @StringRes int appbarTitleResId, @DrawableRes int appbarHomeIconResId) {
+        mThemeResId = themeResId;
+        mAppbarTitleResId = appbarTitleResId;
+        mAppbarHomeIconResId = appbarHomeIconResId;
+    }
+
+
+    public int getThemeResId() {
+        return mThemeResId;
+    }
+
+    public int getAppbarTitleResId() {
+        return mAppbarTitleResId;
+    }
+
+    public int getAppbarHomeIconResId() {
+        return mAppbarHomeIconResId;
+    }
 }

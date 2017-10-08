@@ -2,14 +2,13 @@ package com.koidev.paint.view.paint;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,29 +19,29 @@ import android.widget.Toast;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.PaintView;
-import com.koidev.paint.presenter.BasePaintPresenter;
-import com.koidev.paint.presenter.IBasePaint;
+import com.koidev.paint.presenter.IPaint;
+import com.koidev.paint.presenter.PaintPresenter;
+
+import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
+import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public abstract class PaintFragment extends Fragment implements IBasePaint.View {
+public class PaintFragment extends Fragment implements IPaint.View {
 
-    private IBasePaint.Presenter mPresenter;
+    private static PaintFragment mFragment;
+    private IPaint.Presenter mPresenter;
     private PaintView mPaintView;
 
-    protected abstract
-    @StringRes
-    int getAppBarTitle();
 
-    protected abstract
-    @ColorRes
-    int getAppBarColor();
-
-    protected abstract
-    @DrawableRes
-    int getHomeAsUpIndicatorIcon();
+    public static PaintFragment newInstance() {
+        if (mFragment == null) {
+            mFragment = new PaintFragment();
+        }
+        return mFragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,14 +49,15 @@ public abstract class PaintFragment extends Fragment implements IBasePaint.View 
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        mPresenter = new BasePaintPresenter(getActivity().getApplicationContext(), this);
+        mPresenter = new PaintPresenter(getActivity().getApplicationContext(), this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_base_paint, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_paint, container, false);
         mPaintView = (PaintView) view.findViewById(R.id.canvas_paint);
         return view;
     }
@@ -78,30 +78,6 @@ public abstract class PaintFragment extends Fragment implements IBasePaint.View 
     }
 
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        @StringRes int titleResId = getAppBarTitle();
-        @ColorRes int colorResId = getAppBarColor();
-        @DrawableRes int homeIcon = getHomeAsUpIndicatorIcon();
-
-        //set appbar title
-        Activity activity = getActivity();
-        if (activity instanceof IBasePaintActivity) {
-
-            if (titleResId > 0) {
-                ((IBasePaintActivity) activity).setAppBarTitle(activity.getResources().getString(titleResId));
-            }
-            if (homeIcon > 0) {
-                ((IBasePaintActivity) activity).setHomeAsUpIndicatorIcon(homeIcon);
-            }
-
-            if (colorResId > 0) {
-                ((IBasePaintActivity) activity).setAppBarColor(colorResId);
-            }
-        }
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -141,6 +117,22 @@ public abstract class PaintFragment extends Fragment implements IBasePaint.View 
                 message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        switch (requestCode) {
+            case REQUEST_CODE_PAINT:
+                if (resultCode == Activity.RESULT_OK || data != null) {
+                    Bundle extras = data.getExtras();
+                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
+                    Log.d("TAG", "onActivityResult: " + fileUrl);
 
+                    break;
+                } else {
+                    return;
+                }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

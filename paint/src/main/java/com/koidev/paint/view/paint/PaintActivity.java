@@ -1,126 +1,115 @@
 package com.koidev.paint.view.paint;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
+import android.util.Log;
+
+import com.koidev.paint.R;
+
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
+import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
 
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
  */
 
-public abstract class PaintActivity extends AppCompatActivity implements IBasePaintActivity {
+public class PaintActivity extends AppCompatActivity {
 
-    private static final String EXTRA_KEY_LAUNCH_FRAGMENT = "key.launch.fragment";
-    public static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";
-    public static final int EXTRA_KEY_PAINT = 1;
-    private ActionBar mActionBar;
 
-    @LayoutRes
-    protected abstract int getLayoutResId();
-
-    @IdRes
-    protected abstract int getToolbarResId();
-
-    /**
-     * Instantiate fragment for Paint screen
-     */
-    protected abstract void initPaintFragment();
+    private
+    @StyleRes
+    int mThemeId;
+    private
+    @StringRes
+    int mAppbarTitleResId;
+    private
+    @DrawableRes
+    int mAppbarHomeIconResId;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResId());
-        initToolbar();
-        populateView();
+        gettingViewStyle();
+        setContentView(R.layout.activity_paint);
+        initView();
+        initFragment();
     }
 
-    private void populateView() {
-        Intent intent = getIntent();
-        int launchFragmentCode = 0;
-        if (intent != null && intent.getExtras() != null) {
-            launchFragmentCode = intent.getExtras().getInt(EXTRA_KEY_LAUNCH_FRAGMENT, 0);
-        }
-
-        switch (launchFragmentCode) {
-            case EXTRA_KEY_PAINT:
-                initPaintFragment();
-                break;
-            default:
-                Toast.makeText(this, "Wrong action: fragment code - " + launchFragmentCode, Toast.LENGTH_SHORT).show();
-                finish();
-                break;
-        }
+    private void initFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        PaintFragment paintFragment = PaintFragment.newInstance();
+        ft.add(R.id.container_paint, paintFragment);
+        ft.commit();
     }
 
-    private void initToolbar() {
-        @IdRes int toolbarResId = getToolbarResId();
-        if (toolbarResId == 0 ) return;
-
-        Toolbar toolbar = (Toolbar) findViewById(toolbarResId);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-        mActionBar = getSupportActionBar();
-    }
-
-    @Override
-    public void setAppBarColor(@ColorRes int colorResId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(
-                    getColorCompatible(this, colorResId)
-            );
-        }
-    }
-
-    @Override
-    public void setAppBarTitle(@NonNull String titleString) {
-        if (mActionBar != null)
-            mActionBar.setTitle(titleString);
-    }
-
-    @Override
-    public void setHomeAsUpIndicatorIcon(@DrawableRes int drawable) {
-        if (mActionBar != null) {
-            if (drawable > 0) {
-                mActionBar.setDisplayHomeAsUpEnabled(true);
-                mActionBar.setHomeAsUpIndicator(drawable);
-            } else {
-                mActionBar.setDisplayHomeAsUpEnabled(false);
+    private void gettingViewStyle() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            //get Theme resources id
+            if (extras.containsKey(KEY_APP_THEME_RES_ID)) {
+                mThemeId = extras.getInt(KEY_APP_THEME_RES_ID, 0);
+                if (mThemeId > 0) {
+                    setTheme(mThemeId);
+                }
+            }
+            //get appbar title
+            if (extras.containsKey(KEY_APPBAR_TITLE_RES_ID)) {
+                mAppbarTitleResId = extras.getInt(KEY_APPBAR_TITLE_RES_ID, 0);
+            }
+            //get home as up indicator icon
+            if (extras.containsKey(KEY_APPBAR_HOME_ICON_RES_ID)) {
+                mAppbarHomeIconResId = extras.getInt(KEY_APPBAR_HOME_ICON_RES_ID, 0);
             }
         }
     }
 
-    @ColorInt
-    private static int getColorCompatible(Context context, @ColorRes int id) {
-        if (context == null) {
-            throw new RuntimeException("Context can not be NULL");
+    private void initView() {
+        //setup actionbar
+        if (mThemeId > 0) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_paint);
+            if (toolbar != null) {
+                setSupportActionBar(toolbar);
+                ActionBar actionBar = getSupportActionBar();
+                if (actionBar != null) {
+                    if (mAppbarTitleResId > 0) actionBar.setTitle(mAppbarTitleResId);
+                    if (mAppbarHomeIconResId > 0) {
+                        actionBar.setDisplayHomeAsUpEnabled(true);
+                        actionBar.setHomeAsUpIndicator(mAppbarHomeIconResId);
+                    }
+                }
+            }
         }
-        if (id == 0) {
-            throw new RuntimeException("Color Resource ID can not be 0");
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return ContextCompat.getColor(context, id);
-        } else {
-            return context.getResources().getColor(id);
+    }
+
+
+    private static final int REQUEST_CODE_PAINT = 1001;
+    public static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PAINT:
+                if (requestCode == Activity.RESULT_OK || data != null) {
+                    Bundle extras = data.getExtras();
+                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
+                    Log.d("TAG", "onActivityResult: " + fileUrl);
+
+                    break;
+                } else {
+                    return;
+                }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

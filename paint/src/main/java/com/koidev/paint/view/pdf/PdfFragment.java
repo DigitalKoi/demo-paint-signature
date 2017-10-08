@@ -1,9 +1,12 @@
 package com.koidev.paint.view.pdf;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +22,9 @@ import com.koidev.paint.presenter.PdfPresenter;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
+import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,7 +45,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
     public static PdfFragment newInstance(String textForm) {
         stTextForm = textForm;
         if (mFragment == null) {
-            return new PdfFragment();
+            mFragment = new PdfFragment();
         }
         return mFragment;
     }
@@ -54,10 +60,11 @@ public class PdfFragment extends Fragment implements IPdf.View {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pdf, container, false);
 
+        View view = inflater.inflate(R.layout.fragment_pdf, container, false);
         initViews(view);
         return view;
     }
@@ -127,6 +134,28 @@ public class PdfFragment extends Fragment implements IPdf.View {
             return true;
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PAINT:
+                if (requestCode == Activity.RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
+                    Log.d("TAG", "onActivityResult: " + fileUrl);
+                    Toast.makeText(
+                            getActivity(),
+                            "Path to signature" + fileUrl,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    break;
+                } else {
+                    return;
+                }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

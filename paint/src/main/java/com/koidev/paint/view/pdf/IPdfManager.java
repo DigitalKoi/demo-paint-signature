@@ -40,4 +40,6 @@ public interface IPdfManager {
                   @StringRes int appbarTitleResId,
                   @DrawableRes int appbarHomeIconResId,
                   String textForm);
+
+
 }

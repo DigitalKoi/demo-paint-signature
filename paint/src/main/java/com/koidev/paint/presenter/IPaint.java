@@ -1,6 +1,7 @@
 package com.koidev.paint.presenter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
@@ -11,7 +12,7 @@ import com.koidev.paint.data.PaintView;
  * @email DevSteelKoi@gmail.com
  */
 
-public interface IBasePaint {
+public interface IPaint {
 
     interface View {
         Activity getActivity();
@@ -30,5 +31,7 @@ public interface IBasePaint {
         void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException;
 
         void clearCanvasView(PaintView paintView);
+
+        void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 }

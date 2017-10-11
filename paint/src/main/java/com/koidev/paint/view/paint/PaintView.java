@@ -1,4 +1,4 @@
-package com.koidev.paint.data;
+package com.koidev.paint.view.paint;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.koidev.paint.R;
+import com.koidev.paint.data.ParsableHelper;
 
 import java.util.ArrayList;
 
@@ -67,8 +68,8 @@ public class PaintView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
-        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        int wh = w > h ? h : w;
+        canvasBitmap = Bitmap.createBitmap(wh, wh, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
     }
 

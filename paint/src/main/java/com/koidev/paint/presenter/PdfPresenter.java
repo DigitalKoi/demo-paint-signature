@@ -11,11 +11,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.koidev.paint.R;
+import com.koidev.paint.data.FormPdfHelper;
 import com.koidev.paint.view.paint.PaintActivity;
 import com.koidev.paint.view.pdf.PdfManager;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
@@ -27,14 +34,18 @@ import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
 
 public class PdfPresenter implements IPdf.Presenter {
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    private static final String EXTRA_KEY_PAINT_SIGN = "key.launch.number.sign";
+    public static final String EXTRA_KEY_PAINT_SIGN = "key.launch.number.sign";
 
     private Context mContext;
     private IPdf.View mView;
+    private ArrayList<String> signatureList = new ArrayList<>(2);
 
     public PdfPresenter(Context context, IPdf.View view) {
         mView = view;
         mContext = context;
+        signatureList.add(0,"");
+        signatureList.add(1,"");
+
     }
 
     @Override
@@ -99,8 +110,31 @@ public class PdfPresenter implements IPdf.Presenter {
         intent.putExtra(KEY_APP_THEME_RES_ID, PdfManager.getInstance().getThemeResId());
         intent.putExtra(KEY_APPBAR_HOME_ICON_RES_ID, PdfManager.getInstance().getAppbarHomeIconResId());
         intent.putExtra(KEY_APPBAR_TITLE_RES_ID, PdfManager.getInstance().getAppbarTitleResId());
-        mContext.startActivity(intent);
+        activity.startActivityForResult(intent, REQUEST_CODE_PAINT);
 
 
+    }
+
+    @Override
+    public void setSignature(String fileUrl, int signNumber) {
+        signatureList.set(signNumber, fileUrl);
+        for (String sign : signatureList) {
+            Log.d("TAG", "setSignature: " + sign);
+        }
+    }
+
+    @Override
+    public void savePdf(String stTextForm) {
+        String urlToDir = mContext.getExternalFilesDir("").getAbsolutePath();
+        FormPdfHelper pdfHelper = new FormPdfHelper(
+                signatureList, urlToDir, stTextForm, "Test User", "Test Spouse",  getCurrentDate());
+        pdfHelper.createPdf();
+    }
+
+    @Override
+    public String getCurrentDate() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/d/yyyy");
+        return sdf.format(cal.getTime());
     }
 }

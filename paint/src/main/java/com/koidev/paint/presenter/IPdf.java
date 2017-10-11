@@ -20,5 +20,11 @@ public interface IPdf {
 
 
         void callPaintActivity(int keySignFirst);
+
+        void setSignature(String fileUrl, int signNumber);
+
+        void savePdf(String stTextForm);
+
+        String getCurrentDate();
     }
 }

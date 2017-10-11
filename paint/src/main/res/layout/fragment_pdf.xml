@@ -72,13 +72,19 @@
 
             <TextView
                 android:id="@+id/sign1_ed_tv_pdf"
-                android:text="______________"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/user2_tv_pdf"
+                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/sign1_text_tv_pdf"
-                android:layout_marginStart="8dp"/>
+                android:text="______________"/>
 
+            <ImageView
+                android:id="@+id/sign1_im_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/sign1_ed_tv_pdf"
+                android:layout_toEndOf="@+id/customers_text_tv_pdf"/>
             <TextView
                 android:id="@+id/user2_tv_pdf"
                 android:layout_width="wrap_content"
@@ -122,12 +128,19 @@
 
             <TextView
                 android:id="@+id/sign2_ed_tv_pdf"
-                android:text="______________"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/resid_tv_pdf"
+                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/sign2_text_tv_pdf"
-                android:layout_marginStart="8dp"/>
+                android:text="______________"/>
+
+            <ImageView
+                android:id="@+id/sign2_im_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/sign2_ed_tv_pdf"
+                android:layout_toEndOf="@+id/customers_text_tv_pdf"/>
 
             <TextView
                 android:id="@+id/resid_tv_pdf"

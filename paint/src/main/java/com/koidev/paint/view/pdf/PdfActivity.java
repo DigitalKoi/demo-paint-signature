@@ -1,9 +1,11 @@
 package com.koidev.paint.view.pdf;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -87,5 +89,15 @@ public class PdfActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+                super.onActivityResult(requestCode, resultCode, data);
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                }
+        }
 
 }

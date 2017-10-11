@@ -16,12 +16,13 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.koidev.paint.R;
-import com.koidev.paint.data.PaintView;
+import com.koidev.paint.view.paint.PaintView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
+import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
 import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 /**
@@ -46,10 +47,11 @@ public class PaintPresenter implements IPaint.Presenter {
         checkDeviceStoragePermission();
     }
 
-    private void onSelectPhoto(String fileUrl) {
+    private void onSelectSignature(String fileUrl, int signNumber) {
         Activity activity = mView.getActivity();
         Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
         intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        intent.putExtra(EXTRA_KEY_PAINT_SIGN, signNumber);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -112,19 +114,19 @@ public class PaintPresenter implements IPaint.Presenter {
     }
 
     @Override
-    public void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException {
+    public void saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException {
         if (checkDeviceStoragePermission()) {
             //save drawing
             paintView.setDrawingCacheEnabled(true);
             try {
                 String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
-                fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+                fileUrl += "/" + UUID.randomUUID().toString() + ".jpeg";
                 File img = new File(fileUrl);
                 if (img.createNewFile()) {
                     FileOutputStream out = new FileOutputStream(img);
                     Bitmap bitmap = paintView.getDrawingCache();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    onSelectPhoto(fileUrl);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+                    onSelectSignature(fileUrl, signNumber);
                 } else {
                     mView.showToast("Ops! Not saved signature!");
                 }

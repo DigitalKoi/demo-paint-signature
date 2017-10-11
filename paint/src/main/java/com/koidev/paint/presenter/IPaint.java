@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.koidev.paint.data.PaintView;
+import com.koidev.paint.view.paint.PaintView;
 
 /**
  * @author KoiDev
@@ -28,7 +28,7 @@ public interface IPaint {
 
         boolean checkDeviceStoragePermission();
 
-        void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException;
+        void saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException;
 
         void clearCanvasView(PaintView paintView);
 

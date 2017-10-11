@@ -1,14 +1,12 @@
 package com.koidev.paint.view.paint;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.koidev.paint.R;
-import com.koidev.paint.data.PaintView;
 import com.koidev.paint.presenter.IPaint;
 import com.koidev.paint.presenter.PaintPresenter;
-
-import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
-import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 
 /**
@@ -32,11 +26,13 @@ import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_
 public class PaintFragment extends Fragment implements IPaint.View {
 
     private static PaintFragment mFragment;
+    private static int mSignNumber;
     private IPaint.Presenter mPresenter;
     private PaintView mPaintView;
 
 
-    public static PaintFragment newInstance() {
+    public static PaintFragment newInstance(int signNumber) {
+        mSignNumber = signNumber;
         if (mFragment == null) {
             mFragment = new PaintFragment();
         }
@@ -74,7 +70,7 @@ public class PaintFragment extends Fragment implements IPaint.View {
     }
 
     private void saveCanvas() throws PackageManager.NameNotFoundException {
-        mPresenter.saveSignature(mPaintView);
+        mPresenter.saveSignature(mPaintView, mSignNumber);
     }
 
 
@@ -119,20 +115,7 @@ public class PaintFragment extends Fragment implements IPaint.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_PAINT:
-                if (resultCode == Activity.RESULT_OK || data != null) {
-                    Bundle extras = data.getExtras();
-                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
-                    Log.d("TAG", "onActivityResult: " + fileUrl);
-
-                    break;
-                } else {
-                    return;
-                }
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-        }
+        //TODO: this
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

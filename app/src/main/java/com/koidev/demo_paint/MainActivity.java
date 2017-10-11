@@ -5,19 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.koidev.paint.view.pdf.PdfManager;
 
 import butterknife.BindView;
 
+import static com.koidev.paint.view.pdf.PdfManager.REQUEST_CODE_PDF;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_PAINT = 1001;
     private static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";
 
     @BindView(R.id.tv_contact_us)
@@ -34,16 +33,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_PAINT:
+            case REQUEST_CODE_PDF:
                 if (resultCode == Activity.RESULT_OK || data != null) {
-                    Bundle extras = data.getExtras();
-                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
-                    Log.d("TAG", "onActivityResult: " + fileUrl);
-                    Toast.makeText(
-                            this,
-                            "Path to signature" + fileUrl,
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    //TODO: get pdf path
+//                    String fileUrl = data.getExtras().getString(EXTRA_KEY_SELECTED_FILE_URL);
+//                    Log.d("TAG", "onActivityResult: " + fileUrl);
+//                    Toast.makeText(
+//                            this,
+//                            "Path to signature" + fileUrl,
+//                            Toast.LENGTH_SHORT
+//                    ).show();
                     break;
                 } else {
                     return;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private void showPaint() {
 //        Intent intent = new Intent(this, PaintActivity.class);
 //        intent.putExtra(EXTRA_KEY_LAUNCH_FRAGMENT, PaintActivity.EXTRA_KEY_PAINT);
-//        startActivityForResult(intent, REQUEST_CODE_PAINT);
+//        startActivityForResult(intent, REQUEST_CODE_PDF);
         PdfManager.getInstance().startPdf(
                 this,
                 R.style.AppTheme_NoActionBar /*Theme Resource ID (optional)*/,

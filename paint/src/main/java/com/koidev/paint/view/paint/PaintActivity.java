@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.koidev.paint.R;
 
+import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
@@ -35,6 +36,7 @@ public class PaintActivity extends AppCompatActivity {
     private
     @DrawableRes
     int mAppbarHomeIconResId;
+    private int signNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class PaintActivity extends AppCompatActivity {
 
     private void initFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        PaintFragment paintFragment = PaintFragment.newInstance();
+        PaintFragment paintFragment = PaintFragment.newInstance(signNumber);
         ft.add(R.id.container_paint, paintFragment);
         ft.commit();
     }
@@ -69,6 +71,11 @@ public class PaintActivity extends AppCompatActivity {
             //get home as up indicator icon
             if (extras.containsKey(KEY_APPBAR_HOME_ICON_RES_ID)) {
                 mAppbarHomeIconResId = extras.getInt(KEY_APPBAR_HOME_ICON_RES_ID, 0);
+            }
+            //get id signature
+            if (extras.containsKey(EXTRA_KEY_PAINT_SIGN)) {
+                signNumber = extras.getInt(EXTRA_KEY_PAINT_SIGN);
+                Log.d("TAG", "gettingViewStyle: " + signNumber);
             }
         }
     }

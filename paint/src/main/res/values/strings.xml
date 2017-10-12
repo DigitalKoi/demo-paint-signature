@@ -17,4 +17,7 @@
     <string name="test_spouses">Test Spouse</string>
     <string name="residing_in">Residing in:</string>
     <string name="date">Date:</string>
+
+
+    <string name="not_saved_sign">Ops! Not saved signature!</string>
 </resources>

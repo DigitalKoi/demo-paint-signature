@@ -104,8 +104,8 @@ public class FormPdfHelper {
 
         paragraph.add(new Paragraph("Customer's name", normalFont));
         paragraph.add(new Paragraph(signSt, normalFont));
-        signNameImage.scaleAbsolute(55, 55);
-        signNameImage.setAbsolutePosition(110, 260);
+        signNameImage.scaleAbsolute(50, 50);
+        signNameImage.setAbsolutePosition(120, 270);
         canvas.addImage(signNameImage);
         paragraph.add(Chunk.NEWLINE);
 
@@ -114,8 +114,8 @@ public class FormPdfHelper {
         paragraph.add(new Paragraph("Spouse's name", normalFont));
         paragraph.add(new Paragraph(signSt, normalFont));
         if (!mSignatureList.get(1).equals("")) {
-            signSposeImage.scaleAbsolute(55, 55);
-            signSposeImage.setAbsolutePosition(110, 190);
+            signSposeImage.scaleAbsolute(50, 50);
+            signSposeImage.setAbsolutePosition(120, 200);
             canvas.addImage(signSposeImage);
         }
         paragraph.add(Chunk.NEWLINE);

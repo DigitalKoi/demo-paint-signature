@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
         >
@@ -24,144 +24,172 @@
                 android:id="@+id/text_form_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-            />
+                android:textColor="@android:color/black" android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/user1_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/text_form_tv_pdf"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/test_user"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_form_tv_pdf"/>
 
             <View
                 android:id="@+id/view1_tv_pdf"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_below="@id/user1_tv_pdf"
+                android:layout_marginTop="1dp"
                 android:background="@android:color/black"
-                android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user1_tv_pdf"/>
 
             <TextView
                 android:id="@+id/customers_text_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/view1_tv_pdf"
                 android:text="@string/customers_name"
+                android:elevation="2dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view1_tv_pdf"/>
 
             <TextView
                 android:id="@+id/sign1_text_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customers_text_tv_pdf"
                 android:layout_marginTop="8dp"
                 android:text="@string/signature"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customers_text_tv_pdf"
             />
 
             <TextView
                 android:id="@+id/sign1_ed_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/user2_tv_pdf"
+                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/sign1_text_tv_pdf"
-                android:text="______________"/>
+                android:text="______________"
+                android:elevation="2dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/sign1_text_tv_pdf"
+                app:layout_constraintLeft_toRightOf="@+id/sign1_text_tv_pdf"/>
 
             <ImageView
                 android:id="@+id/sign1_im_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/sign1_ed_tv_pdf"
-                android:layout_toEndOf="@+id/customers_text_tv_pdf"/>
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="@+id/sign1_text_tv_pdf"
+                app:layout_constraintLeft_toRightOf="@+id/sign1_text_tv_pdf"
+                app:layout_constraintRight_toRightOf="@+id/sign2_ed_tv_pdf"
+                app:layout_constraintTop_toBottomOf="@+id/customers_text_tv_pdf"/>
             <TextView
                 android:id="@+id/user2_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/sign1_text_tv_pdf"
                 android:layout_marginTop="8dp"
                 android:text="@string/test_spouses"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign1_text_tv_pdf"
             />
-
             <View
                 android:id="@+id/view2_tv_pdf"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_below="@id/user2_tv_pdf"
+                android:layout_marginTop="1dp"
                 android:background="@android:color/black"
-                android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user2_tv_pdf"/>
 
             <TextView
                 android:id="@+id/spouses_text_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/view2_tv_pdf"
                 android:text="@string/spouses_name"
+                android:elevation="2dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view2_tv_pdf"/>
 
             <TextView
                 android:id="@+id/sign2_text_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/spouses_text_tv_pdf"
                 android:layout_marginTop="8dp"
                 android:text="@string/signature"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spouses_text_tv_pdf"
             />
 
             <TextView
                 android:id="@+id/sign2_ed_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/resid_tv_pdf"
+                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/sign2_text_tv_pdf"
-                android:text="______________"/>
-
-            <ImageView
-                android:id="@+id/sign2_im_pdf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/sign2_ed_tv_pdf"
-                android:layout_toEndOf="@+id/customers_text_tv_pdf"/>
+                android:text="______________"
+                android:elevation="2dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="@+id/sign2_text_tv_pdf"
+                app:layout_constraintLeft_toRightOf="@+id/sign2_text_tv_pdf"/>
 
             <TextView
                 android:id="@+id/resid_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/sign2_text_tv_pdf"
                 android:layout_marginTop="16dp"
                 android:text="@string/residing_in"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-            />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sign2_text_tv_pdf"/>
 
             <TextView
                 android:id="@+id/date_text_tv_pdf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/resid_tv_pdf"
                 android:text="@string/date"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/resid_tv_pdf"
             />
-        </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/sign2_im_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="0dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="@+id/sign2_ed_tv_pdf" app:layout_constraintLeft_toRightOf="@+id/sign2_text_tv_pdf"
+                app:layout_constraintRight_toRightOf="@+id/sign2_ed_tv_pdf"
+                app:layout_constraintTop_toBottomOf="@+id/spouses_text_tv_pdf"/>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

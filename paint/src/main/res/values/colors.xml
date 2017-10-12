@@ -7,4 +7,7 @@
     <!-- Brush color -->
     <color name="colorBrush">#FF000000</color>
     <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorGray">#858585</color>
+
 </resources>

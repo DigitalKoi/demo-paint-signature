@@ -1,9 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@android:color/background_light"
-             tools:context="com.koidev.paint.view.paint.PaintFragment">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/paint_fr_rl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.koidev.paint.view.paint.PaintFragment">
 
     <com.koidev.paint.view.paint.PaintView
         android:id="@+id/canvas_paint"
@@ -12,4 +12,4 @@
         android:background="@color/colorWhite"
         android:tag="PaintView"/>
 
-</FrameLayout>
+</RelativeLayout>

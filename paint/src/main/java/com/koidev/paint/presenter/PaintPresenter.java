@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,10 +16,6 @@ import android.util.Log;
 
 import com.koidev.paint.R;
 import com.koidev.paint.view.paint.PaintView;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.UUID;
 
 import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
 import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
@@ -116,26 +111,12 @@ public class PaintPresenter implements IPaint.Presenter {
     @Override
     public void saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException {
         if (checkDeviceStoragePermission()) {
-            //save drawing
-            paintView.setDrawingCacheEnabled(true);
-            try {
-                String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
-                fileUrl += "/" + UUID.randomUUID().toString() + ".jpeg";
-                File img = new File(fileUrl);
-                if (img.createNewFile()) {
-                    FileOutputStream out = new FileOutputStream(img);
-                    Bitmap bitmap = paintView.getDrawingCache();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-                    onSelectSignature(fileUrl, signNumber);
-                } else {
-                    mView.showToast("Ops! Not saved signature!");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            String result = paintView.saveCanvasInFile(mContext);
+            if (result.equals(mContext.getString(R.string.not_saved_sign))) {
+                mView.showToast(mContext.getString(R.string.not_saved_sign));
+            } else {
+                onSelectSignature(paintView.saveCanvasInFile(mContext), signNumber);
             }
-            // Destroy the current cache.
-            paintView.destroyDrawingCache();
         } else {
             mView.showToast("Not permission for write file");
         }
@@ -150,7 +131,7 @@ public class PaintPresenter implements IPaint.Presenter {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CODE_PAINT:
-                if (requestCode == Activity.RESULT_OK || data != null) {
+                if (data != null) {
                     Bundle extras = data.getExtras();
                     String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
                     Log.d("TAG", "onActivityResult: " + fileUrl);

@@ -15,7 +15,10 @@ import android.view.View;
 import com.koidev.paint.R;
 import com.koidev.paint.data.ParsableHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * @author KoiDev
@@ -61,16 +64,16 @@ public class PaintView extends View {
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
-        brushSize = getResources().getInteger(R.integer.medium_size);
+        brushSize = 14;
         drawPaint.setStrokeWidth(brushSize);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        int wh = w > h ? h : w;
-        canvasBitmap = Bitmap.createBitmap(wh, wh, Bitmap.Config.ARGB_8888);
+        canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
+//        drawCanvas.drawARGB(0, 225, 225, 255);
     }
 
     @Override
@@ -152,6 +155,26 @@ public class PaintView extends View {
         drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         eventList.clear();
         invalidate();
+    }
+
+    public String saveCanvasInFile(Context context) {
+        try {
+            String fileUrl = context.getExternalFilesDir("").getAbsolutePath();
+            fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+            File img = new File(fileUrl);
+            if (img.createNewFile()) {
+                FileOutputStream out = new FileOutputStream(img);
+                Bitmap bitmap = canvasBitmap;
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                return fileUrl;
+            } else {
+                return context.getString(R.string.not_saved_sign);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Not permission for write file";
     }
 
     @Override

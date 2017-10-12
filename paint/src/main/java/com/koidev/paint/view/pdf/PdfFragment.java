@@ -39,11 +39,6 @@ public class PdfFragment extends Fragment implements IPdf.View {
     private static String stTextForm;
     private IPdf.Presenter mPresenter;
 
-    private TextView tvData;
-    private TextView tvSing1;
-    private TextView tvSing2;
-    private TextView textForm;
-
     private ImageView signNameImg;
     private ImageView signSposeImg;
 
@@ -78,14 +73,14 @@ public class PdfFragment extends Fragment implements IPdf.View {
         signNameImg = (ImageView) view.findViewById(R.id.sign1_im_pdf);
         signSposeImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
 
-        textForm = (TextView) view.findViewById(R.id.text_form_tv_pdf);
+        TextView textForm = (TextView) view.findViewById(R.id.text_form_tv_pdf);
         textForm.setText(stTextForm);
 
-        tvData = (TextView) view.findViewById(R.id.date_text_tv_pdf);
+        TextView tvData = (TextView) view.findViewById(R.id.date_text_tv_pdf);
 
         tvData.setText(tvData.getText() + " " + mPresenter.getCurrentDate());
 
-        tvSing1 = (TextView) view.findViewById(R.id.sign1_ed_tv_pdf);
+        TextView tvSing1 = (TextView) view.findViewById(R.id.sign1_ed_tv_pdf);
         tvSing1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +88,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
                 mPresenter.callPaintActivity(KEY_SIGN_FIRST);
             }
         });
-        tvSing2 = (TextView) view.findViewById(R.id.sign2_ed_tv_pdf);
+        TextView tvSing2 = (TextView) view.findViewById(R.id.sign2_ed_tv_pdf);
         tvSing2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,12 +153,15 @@ public class PdfFragment extends Fragment implements IPdf.View {
 
     private void showSignInImageView(String fileUrl, int signNumber) {
         File imgFile = new File(fileUrl);
+        int wh = 150;
         Bitmap bm = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
         if (signNumber < 1) {
-            signNameImg.setImageBitmap(bm);
+//            signNameImg.setAlpha((float) 0.5);
+            signNameImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+
         } else {
-            signSposeImg.setImageBitmap(bm);
+//            signSposeImg.setAlpha((float) 0.5);
+            signSposeImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
         }
     }
 }

@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.koidev.paint.R;
@@ -55,14 +57,31 @@ public class PaintFragment extends Fragment implements IPaint.View {
 
         View view = inflater.inflate(R.layout.fragment_paint, container, false);
         mPaintView = (PaintView) view.findViewById(R.id.canvas_paint);
+        intiView();
         return view;
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
         mPresenter.onStartView();
+    }
+
+
+    private void intiView() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int w = displayMetrics.widthPixels;
+        int h = displayMetrics.heightPixels;
+        if (w > h) {
+            RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(h, h);
+            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            mPaintView.setLayoutParams(layoutParams);
+        } else {
+            RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(w, w);
+            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            mPaintView.setLayoutParams(layoutParams);
+        }
     }
 
     private void clearCanvas() {
@@ -72,8 +91,6 @@ public class PaintFragment extends Fragment implements IPaint.View {
     private void saveCanvas() throws PackageManager.NameNotFoundException {
         mPresenter.saveSignature(mPaintView, mSignNumber);
     }
-
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -23,9 +23,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
+import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
+import static com.koidev.paint.view.pdf.PdfManager.REQUEST_CODE_PDF;
 
 /**
  * @author KoiDev
@@ -128,7 +130,15 @@ public class PdfPresenter implements IPdf.Presenter {
         String urlToDir = mContext.getExternalFilesDir("").getAbsolutePath();
         FormPdfHelper pdfHelper = new FormPdfHelper(
                 signatureList, urlToDir, stTextForm, "Test User", "Test Spouse",  getCurrentDate());
-        pdfHelper.createPdf();
+        returnToMainPathToPdf(pdfHelper.createPdf());
+    }
+
+    private void returnToMainPathToPdf(String pdf) {
+        Activity activity = mView.getActivity();
+        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PDF));
+        intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, pdf);
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
     }
 
     @Override

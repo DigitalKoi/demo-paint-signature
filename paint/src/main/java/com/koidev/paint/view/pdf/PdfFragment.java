@@ -84,7 +84,6 @@ public class PdfFragment extends Fragment implements IPdf.View {
         tvSing1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: call paint activity from presenter with parameters for second first
                 mPresenter.callPaintActivity(KEY_SIGN_FIRST);
             }
         });
@@ -92,7 +91,6 @@ public class PdfFragment extends Fragment implements IPdf.View {
         tvSing2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: call paint activity from presenter with parameters for second signature
                 mPresenter.callPaintActivity(KEY_SIGN_SECOND);
             }
         });

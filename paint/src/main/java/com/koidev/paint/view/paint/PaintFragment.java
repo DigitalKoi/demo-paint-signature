@@ -1,7 +1,6 @@
 package com.koidev.paint.view.paint;
 
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -130,9 +129,4 @@ public class PaintFragment extends Fragment implements IPaint.View {
                 message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO: this
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

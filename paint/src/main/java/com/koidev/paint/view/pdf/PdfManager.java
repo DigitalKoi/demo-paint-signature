@@ -61,11 +61,8 @@ public class PdfManager implements IPdfManager {
         if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
         if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
         if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
-        //TODO:
         activity.startActivityForResult(intent, REQUEST_CODE_PDF);
     }
-
-    //TODO: callback
 
     private void setViewStyle(@StyleRes int themeResId, @StringRes int appbarTitleResId, @DrawableRes int appbarHomeIconResId) {
         mThemeResId = themeResId;

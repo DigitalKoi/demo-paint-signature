@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.koidev.paint.view.pdf.PdfManager;
 
@@ -35,14 +37,13 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CODE_PDF:
                 if (resultCode == Activity.RESULT_OK || data != null) {
-                    //TODO: get pdf path
-//                    String fileUrl = data.getExtras().getString(EXTRA_KEY_SELECTED_FILE_URL);
-//                    Log.d("TAG", "onActivityResult: " + fileUrl);
-//                    Toast.makeText(
-//                            this,
-//                            "Path to signature" + fileUrl,
-//                            Toast.LENGTH_SHORT
-//                    ).show();
+                    String fileUrl = data.getExtras().getString(EXTRA_KEY_SELECTED_FILE_URL);
+                    Log.d("TAG", "onActivityResult: " + fileUrl);
+                    Toast.makeText(
+                            this,
+                            "Path to signature" + fileUrl,
+                            Toast.LENGTH_SHORT
+                    ).show();
                     break;
                 } else {
                     return;

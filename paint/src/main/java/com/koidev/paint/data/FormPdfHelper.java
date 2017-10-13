@@ -51,7 +51,7 @@ public class FormPdfHelper {
         mSpouseName = spouseName;
     }
 
-    public void createPdf() {
+    public String createPdf() {
         try {
             Document document = new Document(PageSize.A4);
             File file = new File(mUrlToDir + File.separator + UUID.randomUUID().toString() + ".pdf");
@@ -59,11 +59,12 @@ public class FormPdfHelper {
             document.open();
             addMetaData(document);
             addFormPage(document, writer);
-//            addContent(document);
             document.close();
+            return file.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";
     }
 
     private void addMetaData(Document document) {

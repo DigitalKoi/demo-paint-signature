@@ -2,6 +2,7 @@ package com.koidev.paint.view.paint;
 
 
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.koidev.paint.presenter.PaintPresenter;
  */
 public class PaintFragment extends Fragment implements IPaint.View {
 
+    private ProgressBar mProgressBar;
     private static PaintFragment mFragment;
     private static int mSignNumber;
     private IPaint.Presenter mPresenter;
@@ -56,7 +59,7 @@ public class PaintFragment extends Fragment implements IPaint.View {
 
         View view = inflater.inflate(R.layout.fragment_paint, container, false);
         mPaintView = (PaintView) view.findViewById(R.id.canvas_paint);
-        intiView();
+        intiView(view);
         return view;
     }
 
@@ -67,17 +70,18 @@ public class PaintFragment extends Fragment implements IPaint.View {
     }
 
 
-    private void intiView() {
+    private void intiView(View view) {
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar_paint);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int w = displayMetrics.widthPixels;
         int h = displayMetrics.heightPixels;
         if (w > h) {
-            RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(h, h);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(h, h);
             layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
             mPaintView.setLayoutParams(layoutParams);
         } else {
-            RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(w, w);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(w, w);
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
             mPaintView.setLayoutParams(layoutParams);
         }
@@ -87,8 +91,26 @@ public class PaintFragment extends Fragment implements IPaint.View {
         mPresenter.clearCanvasView(mPaintView);
     }
 
-    private void saveCanvas() throws PackageManager.NameNotFoundException {
-        mPresenter.saveSignature(mPaintView, mSignNumber);
+    private void saveCanvas() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        final String[] path = {""};
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    path[0] = mPresenter.saveSignature(mPaintView, mSignNumber);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return path[0];
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                mProgressBar.setVisibility(View.GONE);
+                mPresenter.sendSignature(result, mSignNumber);
+            }
+        }.execute();
     }
 
     @Override
@@ -104,11 +126,7 @@ public class PaintFragment extends Fragment implements IPaint.View {
             getActivity().onBackPressed();
         }
         if (i == R.id.action_select_save) {
-            try {
-                saveCanvas();
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            saveCanvas();
             return true;
         } else if (i == R.id.action_select_clear) {
             clearCanvas();

@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author KoiDev
@@ -88,6 +86,18 @@ public class PaintView extends View {
         cachedEvents.clear();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        getParent().requestDisallowInterceptTouchEvent(true);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                performTouchEvent(event);
+        }
+        return true;
+    }
+
     private void touch_start(float x, float y) {
         drawPath.reset();
         drawPath.moveTo(x, y);
@@ -119,19 +129,6 @@ public class PaintView extends View {
         }
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-            case MotionEvent.ACTION_UP:
-                performTouchEvent(event);
-        }
-        return true;
-    }
-
     private void performTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
@@ -156,39 +153,23 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public String saveCanvasInFile(String fileUrl) {
-        final String file = fileUrl + "/" + UUID.randomUUID().toString() + ".png";
-        AsyncTask asyncTask = new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    File img = new File(file);
-                    if (img.createNewFile()) {
-                        FileOutputStream out = new FileOutputStream(img);
-                        Bitmap bitmap = canvasBitmap;
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                        return file;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return file;
-                }
-                return null;
-            }
-        }.execute();
-
-        String pathToSign = "";
-        if (!eventList.isEmpty()) {
+    public String saveCanvasInFile(String fileUrl, int signNumber) {
+        fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+        if (eventList.isEmpty() && signNumber == 0) {
+            return "";
+        } else
             try {
-                pathToSign = asyncTask.get().toString();
-            } catch (InterruptedException | ExecutionException e) {
+                File img = new File(fileUrl);
+                if (img.createNewFile()) {
+                    FileOutputStream out = new FileOutputStream(img);
+                    Bitmap bitmap = canvasBitmap;
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    return fileUrl;
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            return pathToSign != null ? pathToSign : "Ops! Problem with writing to storage";
-        } else {
-            return pathToSign;
-        }
+        return "Ops! Problem with writing to storage!";
     }
 
     @Override

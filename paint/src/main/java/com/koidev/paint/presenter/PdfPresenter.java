@@ -16,19 +16,19 @@ import android.util.Log;
 
 import com.koidev.paint.R;
 import com.koidev.paint.data.FormPdfHelper;
-import com.koidev.paint.view.paint.PaintActivity;
 import com.koidev.paint.data.PdfManager;
+import com.koidev.paint.view.paint.PaintActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
 import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
 import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
 import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
-import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
 
 /**
  * @author KoiDev
@@ -127,14 +127,14 @@ public class PdfPresenter implements IPdf.Presenter {
     }
 
     @Override
-    public void savePdf(String stTextForm) {
+    public void savePdf(String stTextForm, String usersName, String spousesName) {
         String urlToDir = mContext.getExternalFilesDir("").getAbsolutePath();
         if (signatureList.get(0).equals("")) {
             mView.showToast("Please write signature");
         } else {
             mView.showProgressBar(0);
             final FormPdfHelper pdfHelper = new FormPdfHelper(
-                    signatureList, urlToDir, stTextForm, "Test User", "Test Spouse", getCurrentDate());
+                    signatureList, urlToDir, stTextForm, usersName, spousesName, getCurrentDate());
             new AsyncTask<Void, Void, String>() {
 
                 @Override
@@ -145,7 +145,7 @@ public class PdfPresenter implements IPdf.Presenter {
                 @Override
                 protected void onPostExecute(String s) {
                     mView.showProgressBar(8);
-                    returnToMainPathToPdf(pdfHelper.createPdf());
+                    returnToMainPathToPdf(s);
                 }
             }.execute();
         }

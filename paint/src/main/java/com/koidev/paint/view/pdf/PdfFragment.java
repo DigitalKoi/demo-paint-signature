@@ -129,7 +129,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
         }
         if (i == R.id.action_done) {
             if (mPresenter.checkDeviceStoragePermission()) {
-                mPresenter.savePdf(mTextForm);
+                mPresenter.savePdf(mTextForm, mUsersName, mSpousesName);
             } else {
                 Toast.makeText(
                         getContext(),
@@ -173,7 +173,8 @@ public class PdfFragment extends Fragment implements IPdf.View {
 
         } else {
 //            signSpouseImg.setAlpha((float) 0.5);
-            signSpouseImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+            if (bm != null)
+                signSpouseImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
         }
     }
 

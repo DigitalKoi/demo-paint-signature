@@ -22,13 +22,13 @@ public interface IPdf {
 
         boolean checkDeviceStoragePermission();
 
-
         void callPaintActivity(int keySignFirst);
 
         void setSignature(String fileUrl, int signNumber);
 
-        void savePdf(String stTextForm);
+        void savePdf(String stTextForm, String userName, String spouseName);
 
         String getCurrentDate();
+
     }
 }

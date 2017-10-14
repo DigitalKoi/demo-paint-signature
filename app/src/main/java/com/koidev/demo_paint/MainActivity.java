@@ -11,11 +11,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koidev.paint.data.PdfManager;
+
 import butterknife.BindView;
+
+import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_PAINT = 1001;
+    private static final String EXTRA_KEY_SELECTED_FILE_URL = "key.selected.file.url";
 
     @BindView(R.id.tv_contact_us)
     TextView tvContactUs;
@@ -31,10 +35,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_PAINT:
-                if (requestCode == Activity.RESULT_OK || data != null) {
-                    Bundle extras = data.getExtras();
-                    String fileUrl = extras.getString(PaintActivity.EXTRA_KEY_SELECTED_FILE_URL);
+            case REQUEST_CODE_PDF:
+                if (resultCode == Activity.RESULT_OK || data != null) {
+                    String fileUrl = data.getExtras().getString(EXTRA_KEY_SELECTED_FILE_URL);
                     Log.d("TAG", "onActivityResult: " + fileUrl);
                     Toast.makeText(
                             this,
@@ -51,9 +54,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPaint() {
-        Intent intent = new Intent(this, PaintActivity.class);
-        intent.putExtra(PaintActivity.EXTRA_KEY_LAUNCH_FRAGMENT, PaintActivity.EXTRA_KEY_PAINT);
-        startActivityForResult(intent, REQUEST_CODE_PAINT);
+        PdfManager.getInstance().startPdf(
+                this,
+                R.style.AppTheme_NoActionBar /*Theme Resource ID (optional)*/,
+                R.string.app_title_set_signature /*String Resource ID (optional)*/,
+                R.drawable.ic_arrow_back_black_24dp /*Icon Resource ID (optional)*/,
+                getResources().getString(R.string.text_form),
+                "Valentin Churilov",
+                "Anna Churilov"
+        );
     }
 
     private void initView() {

@@ -1,4 +1,4 @@
-package com.koidev.paint.data;
+package com.koidev.paint.view.paint;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,9 +12,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.koidev.paint.R;
+import com.koidev.paint.data.ParsableHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * @author KoiDev
@@ -60,14 +63,13 @@ public class PaintView extends View {
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
-        brushSize = getResources().getInteger(R.integer.medium_size);
+        brushSize = 14;
         drawPaint.setStrokeWidth(brushSize);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
     }
@@ -75,7 +77,6 @@ public class PaintView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //TODO: handle the output with the rotation of the screen
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
 
@@ -83,6 +84,18 @@ public class PaintView extends View {
             performTouchEvent(event);
         }
         cachedEvents.clear();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        getParent().requestDisallowInterceptTouchEvent(true);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                performTouchEvent(event);
+        }
+        return true;
     }
 
     private void touch_start(float x, float y) {
@@ -105,7 +118,7 @@ public class PaintView extends View {
     }
 
     private void touch_up() {
-        if (mDrawPoint == true) {
+        if (mDrawPoint) {
             drawCanvas.drawPoint(mX, mY, drawPaint);
         } else {
             drawPath.lineTo(mX, mY);
@@ -114,19 +127,6 @@ public class PaintView extends View {
             // kill this so we don't double draw
             drawPath.reset();
         }
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
-            case MotionEvent.ACTION_UP:
-                performTouchEvent(event);
-        }
-        return true;
     }
 
     private void performTouchEvent(MotionEvent event) {
@@ -151,6 +151,25 @@ public class PaintView extends View {
         drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
         eventList.clear();
         invalidate();
+    }
+
+    public String saveCanvasInFile(String fileUrl, int signNumber) {
+        fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+        if (eventList.isEmpty() && signNumber == 0) {
+            return "";
+        } else
+            try {
+                File img = new File(fileUrl);
+                if (img.createNewFile()) {
+                    FileOutputStream out = new FileOutputStream(img);
+                    Bitmap bitmap = canvasBitmap;
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                    return fileUrl;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return "Ops! Problem with writing to storage!";
     }
 
     @Override

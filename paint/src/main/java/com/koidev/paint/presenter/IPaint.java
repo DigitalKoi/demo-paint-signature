@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
-import com.koidev.paint.data.PaintView;
+import com.koidev.paint.view.paint.PaintView;
 
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
  */
 
-public interface IBasePaint {
+public interface IPaint {
 
     interface View {
         Activity getActivity();
@@ -25,10 +25,10 @@ public interface IBasePaint {
 
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
-        boolean checkDeviceStoragePermission();
-
-        void saveSignature(PaintView paintView) throws PackageManager.NameNotFoundException;
+        String saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException;
 
         void clearCanvasView(PaintView paintView);
+
+        void sendSignature(String fileUrl, int mSignNumber);
     }
 }

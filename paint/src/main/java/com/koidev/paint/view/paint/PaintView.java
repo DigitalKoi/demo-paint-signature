@@ -74,13 +74,11 @@ public class PaintView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
-//        drawCanvas.drawARGB(0, 225, 225, 255);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //TODO: handle the output with the rotation of the screen
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
 
@@ -110,7 +108,7 @@ public class PaintView extends View {
     }
 
     private void touch_up() {
-        if (mDrawPoint == true) {
+        if (mDrawPoint) {
             drawCanvas.drawPoint(mX, mY, drawPaint);
         } else {
             drawPath.lineTo(mX, mY);

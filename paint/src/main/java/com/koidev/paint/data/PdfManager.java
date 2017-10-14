@@ -7,7 +7,6 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
-import com.koidev.paint.view.pdf.IPdfManager;
 import com.koidev.paint.view.pdf.PdfActivity;
 
 /**

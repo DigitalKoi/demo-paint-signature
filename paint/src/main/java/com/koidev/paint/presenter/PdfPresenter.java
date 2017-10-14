@@ -132,6 +132,7 @@ public class PdfPresenter implements IPdf.Presenter {
         if (signatureList.get(0).equals("")) {
             mView.showToast("Please write signature");
         } else {
+            mView.showProgressBar(0);
             final FormPdfHelper pdfHelper = new FormPdfHelper(
                     signatureList, urlToDir, stTextForm, "Test User", "Test Spouse", getCurrentDate());
             new AsyncTask<Void, Void, String>() {
@@ -143,6 +144,7 @@ public class PdfPresenter implements IPdf.Presenter {
 
                 @Override
                 protected void onPostExecute(String s) {
+                    mView.showProgressBar(8);
                     returnToMainPathToPdf(pdfHelper.createPdf());
                 }
             }.execute();

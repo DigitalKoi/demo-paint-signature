@@ -1,4 +1,4 @@
-package com.koidev.paint.view.pdf;
+package com.koidev.paint.data;
 
 import android.app.Activity;
 import android.support.annotation.DrawableRes;

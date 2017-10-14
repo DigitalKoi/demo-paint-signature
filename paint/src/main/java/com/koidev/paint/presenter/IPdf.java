@@ -13,6 +13,8 @@ public interface IPdf {
         Activity getActivity();
 
         void showToast(String message);
+
+        void showProgressBar(int visible);
     }
 
     interface Presenter {

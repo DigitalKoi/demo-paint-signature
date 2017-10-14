@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
 
     private ImageView signNameImg;
     private ImageView signSpouseImg;
+    private ProgressBar progressBar;
 
     public static PdfFragment newInstance(String textForm, String usersName, String spousesName) {
         mTextForm = textForm;
@@ -76,6 +78,8 @@ public class PdfFragment extends Fragment implements IPdf.View {
     private void initViews(View view) {
         signNameImg = (ImageView) view.findViewById(R.id.sign1_im_pdf);
         signSpouseImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar_pdf);
 
         TextView textForm = (TextView) view.findViewById(R.id.text_form_tv_pdf);
         textForm.setText(mTextForm);
@@ -177,5 +181,10 @@ public class PdfFragment extends Fragment implements IPdf.View {
     public void showToast(String message) {
         Toast.makeText(getContext(),
                 message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressBar(int visible) {
+        progressBar.setVisibility(visible);
     }
 }

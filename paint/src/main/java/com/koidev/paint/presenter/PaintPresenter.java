@@ -110,12 +110,16 @@ public class PaintPresenter implements IPaint.Presenter {
 
     @Override
     public void saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException {
+        String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
+
         if (checkDeviceStoragePermission()) {
-            String result = paintView.saveCanvasInFile(mContext);
+            String result = paintView.saveCanvasInFile(fileUrl);
             if (result.equals(mContext.getString(R.string.not_saved_sign))) {
                 mView.showToast(mContext.getString(R.string.not_saved_sign));
+            } else if (result.equals("") && signNumber == 0) {
+                mView.showToast("Please write signature");
             } else {
-                onSelectSignature(paintView.saveCanvasInFile(mContext), signNumber);
+                onSelectSignature(result, signNumber);
             }
         } else {
             mView.showToast("Not permission for write file");
@@ -135,10 +139,7 @@ public class PaintPresenter implements IPaint.Presenter {
                     Bundle extras = data.getExtras();
                     String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
                     Log.d("TAG", "onActivityResult: " + fileUrl);
-
                     break;
-                } else {
-                    return;
                 }
         }
     }

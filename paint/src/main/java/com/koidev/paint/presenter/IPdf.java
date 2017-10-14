@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 public interface IPdf {
     interface View {
         Activity getActivity();
+
+        void showToast(String message);
     }
 
     interface Presenter {

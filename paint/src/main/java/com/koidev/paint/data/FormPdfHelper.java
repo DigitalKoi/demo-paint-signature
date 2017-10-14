@@ -1,6 +1,5 @@
 package com.koidev.paint.data;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -23,12 +22,7 @@ import java.util.UUID;
  */
 
 public class FormPdfHelper {
-    private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-    private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
-    private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
-    private static Font underFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.UNDERLINE);
-    private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
     private final String mTexForm;
     private String mUserName;

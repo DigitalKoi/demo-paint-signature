@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koidev.paint.view.pdf.PdfManager;
+import com.koidev.paint.data.PdfManager;
 
 import butterknife.BindView;
 
-import static com.koidev.paint.view.pdf.PdfManager.REQUEST_CODE_PDF;
+import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,15 +54,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPaint() {
-//        Intent intent = new Intent(this, PaintActivity.class);
-//        intent.putExtra(EXTRA_KEY_LAUNCH_FRAGMENT, PaintActivity.EXTRA_KEY_PAINT);
-//        startActivityForResult(intent, REQUEST_CODE_PDF);
         PdfManager.getInstance().startPdf(
                 this,
                 R.style.AppTheme_NoActionBar /*Theme Resource ID (optional)*/,
                 R.string.app_title_set_signature /*String Resource ID (optional)*/,
                 R.drawable.ic_arrow_back_black_24dp /*Icon Resource ID (optional)*/,
-                getResources().getString(R.string.text_form)
+                getResources().getString(R.string.text_form),
+                "Valentin Churilov",
+                "Anna Churilov"
         );
     }
 

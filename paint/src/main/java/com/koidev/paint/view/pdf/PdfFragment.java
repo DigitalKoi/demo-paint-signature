@@ -36,14 +36,18 @@ public class PdfFragment extends Fragment implements IPdf.View {
     public static final int KEY_SIGN_FIRST = 0;
     public static final int KEY_SIGN_SECOND = 1;
     private static PdfFragment mFragment;
-    private static String stTextForm;
+    private static String mTextForm;
+    private static String mUsersName;
+    private static String mSpousesName;
     private IPdf.Presenter mPresenter;
 
     private ImageView signNameImg;
-    private ImageView signSposeImg;
+    private ImageView signSpouseImg;
 
-    public static PdfFragment newInstance(String textForm) {
-        stTextForm = textForm;
+    public static PdfFragment newInstance(String textForm, String usersName, String spousesName) {
+        mTextForm = textForm;
+        mUsersName = usersName;
+        mSpousesName = spousesName;
         if (mFragment == null) {
             mFragment = new PdfFragment();
         }
@@ -71,10 +75,16 @@ public class PdfFragment extends Fragment implements IPdf.View {
 
     private void initViews(View view) {
         signNameImg = (ImageView) view.findViewById(R.id.sign1_im_pdf);
-        signSposeImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
+        signSpouseImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
 
         TextView textForm = (TextView) view.findViewById(R.id.text_form_tv_pdf);
-        textForm.setText(stTextForm);
+        textForm.setText(mTextForm);
+
+        TextView userName = (TextView) view.findViewById(R.id.user1_tv_pdf);
+        userName.setText(mUsersName);
+
+        TextView spouseName = (TextView) view.findViewById(R.id.user2_tv_pdf);
+        spouseName.setText(mSpousesName);
 
         TextView tvData = (TextView) view.findViewById(R.id.date_text_tv_pdf);
 
@@ -115,7 +125,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
         }
         if (i == R.id.action_done) {
             if (mPresenter.checkDeviceStoragePermission()) {
-                mPresenter.savePdf(stTextForm);
+                mPresenter.savePdf(mTextForm);
             } else {
                 Toast.makeText(
                         getContext(),
@@ -158,8 +168,14 @@ public class PdfFragment extends Fragment implements IPdf.View {
             signNameImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
 
         } else {
-//            signSposeImg.setAlpha((float) 0.5);
-            signSposeImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+//            signSpouseImg.setAlpha((float) 0.5);
+            signSpouseImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
         }
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getContext(),
+                message, Toast.LENGTH_SHORT).show();
     }
 }

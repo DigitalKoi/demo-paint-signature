@@ -1,4 +1,4 @@
-package com.koidev.paint.view.pdf;
+package com.koidev.paint.data;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
+
+import com.koidev.paint.view.pdf.IPdfManager;
+import com.koidev.paint.view.pdf.PdfActivity;
 
 /**
  * @author KoiDev
@@ -36,7 +39,9 @@ public class PdfManager implements IPdfManager {
                          @StyleRes int themeResId,
                          @StringRes int appbarTitleResId,
                          @DrawableRes int appbarHomeIconResId,
-                         String textForm) {
+                         String textForm,
+                         String usersName,
+                         String spousesName) {
 
         setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
         Intent intent = new Intent(fragment.getActivity(), PdfActivity.class);
@@ -45,6 +50,8 @@ public class PdfManager implements IPdfManager {
         if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
         if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
         if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
+        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_USERS, usersName);
+        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_SPOUSES, spousesName);
         fragment.startActivityForResult(intent, REQUEST_CODE_PDF);
     }
 
@@ -53,7 +60,9 @@ public class PdfManager implements IPdfManager {
                          @StyleRes int themeResId,
                          @StringRes int appbarTitleResId,
                          @DrawableRes int appbarHomeIconResId,
-                         String textForm) {
+                         String textForm,
+                         String usersName,
+                         String spousesName) {
         setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
         Intent intent = new Intent(activity, PdfActivity.class);
 
@@ -61,6 +70,8 @@ public class PdfManager implements IPdfManager {
         if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
         if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
         if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
+        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_USERS, usersName);
+        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_SPOUSES, spousesName);
         activity.startActivityForResult(intent, REQUEST_CODE_PDF);
     }
 

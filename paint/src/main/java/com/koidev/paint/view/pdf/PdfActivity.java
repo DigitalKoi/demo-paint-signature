@@ -19,6 +19,8 @@ public class PdfActivity extends AppCompatActivity {
     public static final String KEY_APPBAR_TITLE_RES_ID = "key.app.title.res.id";
     public static final String KEY_APPBAR_HOME_ICON_RES_ID = "key.app.home.icon.res.id";
     public static final String KEY_TEXT_FORM_ID = "key.app.textform.id";
+    public static final String KEY_TEXT_USERS = "key.app.user";
+    public static final String KEY_TEXT_SPOUSES = "key.app.spouse";
 
     private
     @StyleRes
@@ -30,6 +32,8 @@ public class PdfActivity extends AppCompatActivity {
     @DrawableRes
     int mAppbarHomeIconResId;
     private String stTextForm;
+    private String stNameUsers;
+    private String stNameSpouses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class PdfActivity extends AppCompatActivity {
 
     private void initFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        PdfFragment pdfFragment = PdfFragment.newInstance(stTextForm);
+        PdfFragment pdfFragment = PdfFragment.newInstance(stTextForm, stNameUsers, stNameSpouses);
         ft.add(R.id.container_pdf, pdfFragment);
         ft.commit();
     }
@@ -69,6 +73,15 @@ public class PdfActivity extends AppCompatActivity {
             if (extras.containsKey(KEY_TEXT_FORM_ID)) {
                 stTextForm = extras.getString(KEY_TEXT_FORM_ID);
             }
+              //get name Users
+            if (extras.containsKey(KEY_TEXT_USERS)) {
+                stNameUsers = extras.getString(KEY_TEXT_USERS);
+            }
+            //get name Spouse's
+            if (extras.containsKey(KEY_TEXT_SPOUSES)) {
+                stNameSpouses = extras.getString(KEY_TEXT_SPOUSES);
+            }
+
         }
     }
 

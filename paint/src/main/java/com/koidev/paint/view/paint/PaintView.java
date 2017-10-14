@@ -6,19 +6,20 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.koidev.paint.R;
 import com.koidev.paint.data.ParsableHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author KoiDev
@@ -157,24 +158,39 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public String saveCanvasInFile(Context context) {
-        try {
-            String fileUrl = context.getExternalFilesDir("").getAbsolutePath();
-            fileUrl += "/" + UUID.randomUUID().toString() + ".png";
-            File img = new File(fileUrl);
-            if (img.createNewFile()) {
-                FileOutputStream out = new FileOutputStream(img);
-                Bitmap bitmap = canvasBitmap;
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                return fileUrl;
-            } else {
-                return context.getString(R.string.not_saved_sign);
-            }
+    public String saveCanvasInFile(String fileUrl) {
+        final String file = fileUrl + "/" + UUID.randomUUID().toString() + ".png";
+        AsyncTask asyncTask = new AsyncTask<Void, Void, String>() {
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            @Override
+            protected String doInBackground(Void... params) {
+                try {
+                    File img = new File(file);
+                    if (img.createNewFile()) {
+                        FileOutputStream out = new FileOutputStream(img);
+                        Bitmap bitmap = canvasBitmap;
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                        return file;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return file;
+                }
+                return null;
+            }
+        }.execute();
+
+        String pathToSign = "";
+        if (!eventList.isEmpty()) {
+            try {
+                pathToSign = asyncTask.get().toString();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            return pathToSign != null ? pathToSign : "Ops! Problem with writing to storage";
+        } else {
+            return pathToSign;
         }
-        return "Not permission for write file";
     }
 
     @Override

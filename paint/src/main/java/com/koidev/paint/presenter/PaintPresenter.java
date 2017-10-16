@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,10 @@ import android.support.v7.app.AlertDialog;
 import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.view.paint.PaintView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.UUID;
 
 /**
  * @author KoiDev
@@ -60,27 +65,49 @@ public class PaintPresenter implements IPaint.Presenter {
     }
 
     @Override
-    public String saveSignature(PaintView paintView, final int signNumber) {
-        String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
+    public void saveSignature(final int signNumber) {
+        final String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
 
-        if (checkDeviceStoragePermission()) {
-            new AsyncTask<Void, Void, String >(){
+        if (!checkDeviceStoragePermission()) return;
 
-                @Override
-                protected String doInBackground(Void... params) {
-                    return paintView.saveCanvasInFile(fileUrl, signNumber);
-                }
+        new AsyncTask<Void, Void, String>() {
 
-                @Override
-                protected void onPostExecute(String result) {
-                    sendSignature(result, signNumber);
-                }
-            };
-            return paintView.saveCanvasInFile(fileUrl, signNumber);
+            @Override
+            protected void onPreExecute() {
+                mView.showProgressBar();
+            }
 
-        } else {
-            return "Not permission for write file";
-        }
+            @Override
+            protected String doInBackground(Void... params) {
+                return saveCanvasInFile(fileUrl, signNumber);
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                sendSignature(result, signNumber);
+                mView.hideProgressBar();
+            }
+
+
+            private String saveCanvasInFile(String fileUrl, int signNumber) {
+                fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+                if (eventList.isEmpty() && signNumber == 0) {
+                    return "";
+                } else
+                    try {
+                        File img = new File(fileUrl);
+                        if (img.createNewFile()) {
+                            FileOutputStream out = new FileOutputStream(img);
+                            Bitmap bitmap = canvasBitmap;
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                            return fileUrl;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                return "Ops! Problem with writing to storage!";
+            }
+        };
     }
 
     @Override

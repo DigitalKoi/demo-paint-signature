@@ -1,7 +1,6 @@
 package com.koidev.paint.presenter;
 
 import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
 import com.koidev.paint.view.paint.PaintView;
@@ -18,6 +17,12 @@ public interface IPaint {
 
         void showToast(String message);
 
+        void showProgressBar();
+
+        void hideProgressBar();
+
+        PaintView getPaintView();
+
     }
 
     interface Presenter {
@@ -25,7 +30,7 @@ public interface IPaint {
 
         void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
-        String saveSignature(PaintView paintView, int signNumber) throws PackageManager.NameNotFoundException;
+        void saveSignature(int signNumber);
 
         void clearCanvasView(PaintView paintView);
 

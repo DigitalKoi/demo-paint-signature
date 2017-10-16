@@ -1,7 +1,6 @@
 package com.koidev.paint.view.paint;
 
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -88,20 +87,6 @@ public class PaintFragment extends Fragment implements IPaint.View {
         }
     }
 
-    private void clearCanvas() {
-        mPresenter.clearCanvasView(mPaintView);
-    }
-
-    private void saveCanvas() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        try {
-            mPresenter.saveSignature(mPaintView, mSignNumber);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_paint, menu);
@@ -113,15 +98,14 @@ public class PaintFragment extends Fragment implements IPaint.View {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             getActivity().onBackPressed();
-        }
-        if (i == R.id.action_select_save) {
-            saveCanvas();
+        } else if (i == R.id.action_select_save) {
+            mPresenter.saveSignature(mSignNumber);
             return true;
         } else if (i == R.id.action_select_clear) {
-            clearCanvas();
+            mPresenter.clearCanvasView(mPaintView);
             return true;
         } else {
-            return true;
+            return false;
         }
     }
 
@@ -136,4 +120,18 @@ public class PaintFragment extends Fragment implements IPaint.View {
                 message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showProgressBar() {
+        if (mProgressBar != null) mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public PaintView getPaintView() {
+        return mPaintView;
+    }
 }

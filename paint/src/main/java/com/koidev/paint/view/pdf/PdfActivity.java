@@ -41,14 +41,15 @@ public class PdfActivity extends AppCompatActivity {
         gettingViewStyle();
         setContentView(R.layout.activity_pdf);
         initView();
-        initFragment();
+        if (savedInstanceState == null) {
+            initFragment();
+        }
     }
 
     private void initFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PdfFragment pdfFragment = PdfFragment.newInstance(stTextForm, stNameUsers, stNameSpouses);
-        ft.add(R.id.container_pdf, pdfFragment);
-        ft.commit();
+        ft.add(R.id.container_pdf, pdfFragment).commit();
     }
 
     private void gettingViewStyle() {

@@ -44,7 +44,9 @@ public class PaintActivity extends AppCompatActivity {
         gettingViewStyle();
         setContentView(R.layout.activity_paint);
         initView();
-        initFragment();
+        if (savedInstanceState == null) {
+            initFragment();
+        }
     }
 
     private void initFragment() {

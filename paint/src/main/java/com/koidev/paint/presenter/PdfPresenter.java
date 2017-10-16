@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.data.FormPdfHelper;
 import com.koidev.paint.data.PdfManager;
@@ -23,12 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
-import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
-import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
-import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID;
-import static com.koidev.paint.view.pdf.PdfActivity.KEY_APPBAR_TITLE_RES_ID;
-import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
+import static com.koidev.paint.Constants.REQUEST_CODE_STORAGE_PERMISSION;
 
 /**
  * @author KoiDev
@@ -36,8 +32,6 @@ import static com.koidev.paint.view.pdf.PdfActivity.KEY_APP_THEME_RES_ID;
  */
 
 public class PdfPresenter implements IPdf.Presenter {
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    public static final String EXTRA_KEY_PAINT_SIGN = "key.launch.number.sign";
 
     private Context mContext;
     private IPdf.View mView;
@@ -56,7 +50,7 @@ public class PdfPresenter implements IPdf.Presenter {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION:
+            case Constants.REQUEST_CODE_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //TODO something
                 }
@@ -87,7 +81,7 @@ public class PdfPresenter implements IPdf.Presenter {
                                         new String[]{
                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                                         },
-                                        REQUEST_CODE_STORAGE_PERMISSION
+                                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                                 );
                             }
                         })
@@ -98,7 +92,7 @@ public class PdfPresenter implements IPdf.Presenter {
                         new String[]{
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
-                        REQUEST_CODE_STORAGE_PERMISSION
+                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                 );
             }
         }
@@ -109,11 +103,11 @@ public class PdfPresenter implements IPdf.Presenter {
     public void callPaintActivity(int keySignFirst) {
         Activity activity = mView.getActivity();
         Intent intent = new Intent(mContext, PaintActivity.class);
-        intent.putExtra(EXTRA_KEY_PAINT_SIGN, keySignFirst);
-        intent.putExtra(KEY_APP_THEME_RES_ID, PdfManager.getInstance().getThemeResId());
-        intent.putExtra(KEY_APPBAR_HOME_ICON_RES_ID, PdfManager.getInstance().getAppbarHomeIconResId());
-        intent.putExtra(KEY_APPBAR_TITLE_RES_ID, PdfManager.getInstance().getAppbarTitleResId());
-        activity.startActivityForResult(intent, REQUEST_CODE_PAINT);
+        intent.putExtra(Constants.EXTRA_KEY_PAINT_SIGN, keySignFirst);
+        intent.putExtra(Constants.KEY_APP_THEME_RES_ID, PdfManager.getInstance().getThemeResId());
+        intent.putExtra(Constants.KEY_APPBAR_HOME_ICON_RES_ID, PdfManager.getInstance().getAppbarHomeIconResId());
+        intent.putExtra(Constants.KEY_APPBAR_TITLE_RES_ID, PdfManager.getInstance().getAppbarTitleResId());
+        activity.startActivityForResult(intent, Constants.REQUEST_CODE_PAINT);
 
 
     }
@@ -153,8 +147,8 @@ public class PdfPresenter implements IPdf.Presenter {
 
     private void returnToMainPathToPdf(String pdf) {
         Activity activity = mView.getActivity();
-        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PDF));
-        intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, pdf);
+        Intent intent = new Intent(String.valueOf(Constants.REQUEST_CODE_PDF));
+        intent.putExtra(Constants.EXTRA_KEY_SELECTED_FILE_URL, pdf);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }

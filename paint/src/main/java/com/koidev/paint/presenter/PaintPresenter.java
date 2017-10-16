@@ -6,17 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.view.paint.PaintView;
-
-import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
-import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
 
 /**
  * @author KoiDev
@@ -25,8 +24,6 @@ import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_
 
 public class PaintPresenter implements IPaint.Presenter {
 
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    public static final int REQUEST_CODE_PAINT = 1001;
     private Context mContext;
     private IPaint.View mView;
 
@@ -42,9 +39,9 @@ public class PaintPresenter implements IPaint.Presenter {
 
     private void onSelectSignature(String fileUrl, int signNumber) {
         Activity activity = mView.getActivity();
-        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
-        intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
-        intent.putExtra(EXTRA_KEY_PAINT_SIGN, signNumber);
+        Intent intent = new Intent(String.valueOf(Constants.REQUEST_CODE_PAINT));
+        intent.putExtra(Constants.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        intent.putExtra(Constants.EXTRA_KEY_PAINT_SIGN, signNumber);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -52,7 +49,7 @@ public class PaintPresenter implements IPaint.Presenter {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION:
+            case Constants.REQUEST_CODE_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     onStartView();
                 } else {
@@ -63,10 +60,22 @@ public class PaintPresenter implements IPaint.Presenter {
     }
 
     @Override
-    public String saveSignature(PaintView paintView, int signNumber) {
+    public String saveSignature(PaintView paintView, final int signNumber) {
         String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
 
         if (checkDeviceStoragePermission()) {
+            new AsyncTask<Void, Void, String >(){
+
+                @Override
+                protected String doInBackground(Void... params) {
+                    return paintView.saveCanvasInFile(fileUrl, signNumber);
+                }
+
+                @Override
+                protected void onPostExecute(String result) {
+                    sendSignature(result, signNumber);
+                }
+            };
             return paintView.saveCanvasInFile(fileUrl, signNumber);
 
         } else {
@@ -117,7 +126,7 @@ public class PaintPresenter implements IPaint.Presenter {
                                         new String[]{
                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                                         },
-                                        REQUEST_CODE_STORAGE_PERMISSION
+                                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                                 );
                             }
                         })
@@ -128,7 +137,7 @@ public class PaintPresenter implements IPaint.Presenter {
                         new String[]{
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
-                        REQUEST_CODE_STORAGE_PERMISSION
+                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                 );
             }
         }

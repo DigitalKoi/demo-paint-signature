@@ -7,7 +7,12 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.view.pdf.PdfActivity;
+
+import static com.koidev.paint.Constants.KEY_APPBAR_HOME_ICON_RES_ID;
+import static com.koidev.paint.Constants.KEY_APPBAR_TITLE_RES_ID;
+import static com.koidev.paint.Constants.REQUEST_CODE_PDF;
 
 /**
  * @author KoiDev
@@ -15,9 +20,6 @@ import com.koidev.paint.view.pdf.PdfActivity;
  */
 
 public class PdfManager implements IPdfManager {
-
-    public static final int REQUEST_CODE_PDF = 1001;
-
     @StyleRes int mThemeResId;
     @StringRes int mAppbarTitleResId;
 
@@ -45,13 +47,13 @@ public class PdfManager implements IPdfManager {
         setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
         Intent intent = new Intent(fragment.getActivity(), PdfActivity.class);
 
-        if (themeResId > 0) intent.putExtra(PdfActivity.KEY_APP_THEME_RES_ID, themeResId);
-        if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
-        if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
-        if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
-        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_USERS, usersName);
-        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_SPOUSES, spousesName);
-        fragment.startActivityForResult(intent, REQUEST_CODE_PDF);
+        if (themeResId > 0) intent.putExtra(Constants.KEY_APP_THEME_RES_ID, themeResId);
+        if (appbarTitleResId > 0) intent.putExtra(KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
+        if (appbarHomeIconResId > 0) intent.putExtra(KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
+        if (!textForm.isEmpty()) intent.putExtra(Constants.KEY_TEXT_FORM_ID, textForm);
+        if (!usersName.isEmpty()) intent.putExtra(Constants.KEY_TEXT_USERS, usersName);
+        if (!usersName.isEmpty()) intent.putExtra(Constants.KEY_TEXT_SPOUSES, spousesName);
+        fragment.startActivityForResult(intent, Constants.REQUEST_CODE_PDF);
     }
 
     @Override
@@ -65,13 +67,13 @@ public class PdfManager implements IPdfManager {
         setViewStyle(themeResId, appbarTitleResId, appbarHomeIconResId);
         Intent intent = new Intent(activity, PdfActivity.class);
 
-        if (themeResId > 0) intent.putExtra(PdfActivity.KEY_APP_THEME_RES_ID, themeResId);
-        if (appbarTitleResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
-        if (appbarHomeIconResId > 0) intent.putExtra(PdfActivity.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
-        if (!textForm.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_FORM_ID, textForm);
-        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_USERS, usersName);
-        if (!usersName.isEmpty()) intent.putExtra(PdfActivity.KEY_TEXT_SPOUSES, spousesName);
-        activity.startActivityForResult(intent, REQUEST_CODE_PDF);
+        if (themeResId > 0) intent.putExtra(Constants.KEY_APP_THEME_RES_ID, themeResId);
+        if (appbarTitleResId > 0) intent.putExtra(Constants.KEY_APPBAR_TITLE_RES_ID, appbarTitleResId);
+        if (appbarHomeIconResId > 0) intent.putExtra(Constants.KEY_APPBAR_HOME_ICON_RES_ID, appbarHomeIconResId);
+        if (!textForm.isEmpty()) intent.putExtra(Constants.KEY_TEXT_FORM_ID, textForm);
+        if (!usersName.isEmpty()) intent.putExtra(Constants.KEY_TEXT_USERS, usersName);
+        if (!usersName.isEmpty()) intent.putExtra(Constants.KEY_TEXT_SPOUSES, spousesName);
+        activity.startActivityForResult(intent, Constants.REQUEST_CODE_PDF);
     }
 
     private void setViewStyle(@StyleRes int themeResId, @StringRes int appbarTitleResId, @DrawableRes int appbarHomeIconResId) {

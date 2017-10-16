@@ -49,7 +49,7 @@ public class PaintFragment extends Fragment implements IPaint.View {
         if (getArguments() != null) {
             mSignNumber = getArguments().getInt(Constants.KEY_SIGN_NUMBER);
         }
-        mPresenter = new PaintPresenter(getActivity().getApplicationContext(), this);
+        mPresenter = new PaintPresenter(this);
     }
 
     @Override
@@ -104,9 +104,8 @@ public class PaintFragment extends Fragment implements IPaint.View {
         } else if (i == R.id.action_select_clear) {
             mPresenter.clearCanvasView(mPaintView);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

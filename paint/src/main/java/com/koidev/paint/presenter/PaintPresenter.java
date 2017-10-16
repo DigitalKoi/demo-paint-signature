@@ -2,7 +2,6 @@ package com.koidev.paint.presenter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,12 +28,10 @@ import java.util.UUID;
 
 public class PaintPresenter implements IPaint.Presenter {
 
-    private Context mContext;
     private IPaint.View mView;
 
-    public PaintPresenter(Context context, IPaint.View view) {
+    public PaintPresenter(IPaint.View view) {
         mView = view;
-        mContext = context;
     }
 
     @Override
@@ -66,48 +63,9 @@ public class PaintPresenter implements IPaint.Presenter {
 
     @Override
     public void saveSignature(final int signNumber) {
-        final String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
-
         if (!checkDeviceStoragePermission()) return;
 
-        new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected void onPreExecute() {
-                mView.showProgressBar();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                return saveCanvasInFile(fileUrl, signNumber);
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                sendSignature(result, signNumber);
-                mView.hideProgressBar();
-            }
-
-
-            private String saveCanvasInFile(String fileUrl, int signNumber) {
-                fileUrl += "/" + UUID.randomUUID().toString() + ".png";
-                if (eventList.isEmpty() && signNumber == 0) {
-                    return "";
-                } else
-                    try {
-                        File img = new File(fileUrl);
-                        if (img.createNewFile()) {
-                            FileOutputStream out = new FileOutputStream(img);
-                            Bitmap bitmap = canvasBitmap;
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                            return fileUrl;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                return "Ops! Problem with writing to storage!";
-            }
-        };
+        new SavePaintAsync(signNumber).execute();
     }
 
     @Override
@@ -169,5 +127,64 @@ public class PaintPresenter implements IPaint.Presenter {
             }
         }
         return isAccessAllowed;
+    }
+
+
+
+    private class SavePaintAsync extends AsyncTask<Void, Void, String> {
+
+        private boolean mIsEventListEmpty;
+        private int mSignNumber;
+        private String mFileUrl;
+        private Bitmap mCanvasBitMap;
+
+        public SavePaintAsync(int signNumber) {
+            mSignNumber = signNumber;
+
+            File file = mView.getActivity().getExternalFilesDir("");
+            if (file != null) {
+               if (!file.exists()) file.mkdir();
+                mFileUrl = file.getAbsolutePath();
+            }
+
+            PaintView paintView = mView.getPaintView();
+            mIsEventListEmpty = paintView.isEventListEmpty();
+            mCanvasBitMap = paintView.getCanvasBitmap();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mView.showProgressBar();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            return saveCanvasInFile(mFileUrl, mSignNumber);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            sendSignature(result, mSignNumber);
+            mView.hideProgressBar();
+        }
+
+        private String saveCanvasInFile(String fileUrl, int signNumber) {
+            fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+            if (mIsEventListEmpty && signNumber == 0) {
+                return "";
+            } else
+                try {
+                    File img = new File(fileUrl);
+                    if (img.createNewFile()) {
+                        FileOutputStream out = new FileOutputStream(img);
+                        Bitmap bitmap = mCanvasBitMap;
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                        return fileUrl;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            return "Ops! Problem with writing to storage!";
+        }
     }
 }

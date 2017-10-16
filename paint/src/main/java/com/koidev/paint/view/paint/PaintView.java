@@ -161,4 +161,12 @@ public class PaintView extends View {
         cachedEvents = helper.events;
         super.onRestoreInstanceState(helper.parcelable);
     }
+
+    public boolean isEventListEmpty() {
+        return eventList == null || eventList.isEmpty();
+    }
+
+    public Bitmap getCanvasBitmap(){
+        return canvasBitmap;
+    }
 }

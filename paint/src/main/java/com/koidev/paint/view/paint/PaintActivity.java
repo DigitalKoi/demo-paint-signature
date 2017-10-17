@@ -1,6 +1,5 @@
 package com.koidev.paint.view.paint;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -93,18 +92,14 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case Constants.REQUEST_CODE_PAINT:
-                if (requestCode == Activity.RESULT_OK || data != null) {
+                if (data != null) {
                     Bundle extras = data.getExtras();
                     String fileUrl = extras.getString(Constants.EXTRA_KEY_SELECTED_FILE_URL);
                     Log.d("TAG", "onActivityResult: " + fileUrl);
-
                     break;
                 } else {
                     return;

@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.koidev.paint.Constants.REQUEST_CODE_STORAGE_PERMISSION;
+import static com.koidev.paint.R.string.sign_is_clear;
 
 /**
  * @author KoiDev
@@ -124,7 +124,7 @@ public class PdfPresenter implements IPdf.Presenter {
     public void savePdf(String stTextForm, String usersName, String spousesName) {
         String urlToDir = mContext.getExternalFilesDir("").getAbsolutePath();
         if (signatureList.get(0).equals("")) {
-            mView.showToast("Please write signature");
+            mView.showToast(mView.getActivity().getResources().getString(sign_is_clear));
         } else {
             mView.showProgressBar(0);
             final FormPdfHelper pdfHelper = new FormPdfHelper(

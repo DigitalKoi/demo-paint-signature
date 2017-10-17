@@ -57,11 +57,10 @@ public class PaintView extends View {
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        canvasPaint = new Paint(Paint.DITHER_FLAG);
-
         brushSize = 14;
         drawPaint.setStrokeWidth(brushSize);
+        canvasPaint = new Paint(Paint.DITHER_FLAG);
+
     }
 
     @Override
@@ -150,6 +149,14 @@ public class PaintView extends View {
         invalidate();
     }
 
+    public boolean isEventListEmpty() {
+        return eventList == null || eventList.isEmpty();
+    }
+
+    public Bitmap getCanvasBitmap(){
+        return canvasBitmap;
+    }
+
     @Override
     protected Parcelable onSaveInstanceState() {
         return new ParsableHelper(eventList, super.onSaveInstanceState());
@@ -160,13 +167,5 @@ public class PaintView extends View {
         ParsableHelper helper = (ParsableHelper) state;
         cachedEvents = helper.events;
         super.onRestoreInstanceState(helper.parcelable);
-    }
-
-    public boolean isEventListEmpty() {
-        return eventList == null || eventList.isEmpty();
-    }
-
-    public Bitmap getCanvasBitmap(){
-        return canvasBitmap;
     }
 }

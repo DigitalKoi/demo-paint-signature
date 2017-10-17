@@ -27,10 +27,10 @@ import com.koidev.paint.presenter.PaintPresenter;
  */
 public class PaintFragment extends Fragment implements IPaint.View {
 
-    private ProgressBar mProgressBar;
-    private int mSignNumber;
     private IPaint.Presenter mPresenter;
+    private ProgressBar mProgressBar;
     private PaintView mPaintView;
+    private int mSignNumber;
 
 
     public static PaintFragment newInstance(int signNumber) {

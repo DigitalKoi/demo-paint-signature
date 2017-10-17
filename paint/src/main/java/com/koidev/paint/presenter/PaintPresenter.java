@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.koidev.paint.Constants;
 import com.koidev.paint.R;
@@ -21,6 +22,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
+import static android.content.ContentValues.TAG;
+import static com.koidev.paint.R.string.not_saved_sign;
+import static com.koidev.paint.R.string.sign_is_clear;
+
 /**
  * @author KoiDev
  * @email DevSteelKoi@gmail.com
@@ -29,6 +34,8 @@ import java.util.UUID;
 public class PaintPresenter implements IPaint.Presenter {
 
     private IPaint.View mView;
+    private String mPathToFile;
+    private int recordedState;
 
     public PaintPresenter(IPaint.View view) {
         mView = view;
@@ -75,11 +82,11 @@ public class PaintPresenter implements IPaint.Presenter {
 
     @Override
     public void sendSignature(String result, int mSignNumber) {
-        if (result.equals("Ops! Problem with writing to storage!")) {
-            mView.showToast(result);
-        } else if (result.equals("") && mSignNumber == 0) {
-            mView.showToast("Please write signature");
-        } else {
+        if (recordedState == Constants.KEY_SIGN_NOT_RECORDER) {
+            mView.showToast(mView.getActivity().getResources().getString(not_saved_sign));
+        } else if (recordedState == Constants.KEY_SIGN_CLEAR) {
+            mView.showToast(mView.getActivity().getResources().getString(sign_is_clear));
+        } else if (recordedState == Constants.KEY_SIGN_RECORDER){
             onSelectSignature(result, mSignNumber);
         }
     }
@@ -130,7 +137,6 @@ public class PaintPresenter implements IPaint.Presenter {
     }
 
 
-
     private class SavePaintAsync extends AsyncTask<Void, Void, String> {
 
         private boolean mIsEventListEmpty;
@@ -138,12 +144,12 @@ public class PaintPresenter implements IPaint.Presenter {
         private String mFileUrl;
         private Bitmap mCanvasBitMap;
 
-        public SavePaintAsync(int signNumber) {
+        SavePaintAsync(int signNumber) {
             mSignNumber = signNumber;
 
             File file = mView.getActivity().getExternalFilesDir("");
             if (file != null) {
-               if (!file.exists()) file.mkdir();
+                if (!file.exists()) file.mkdir();
                 mFileUrl = file.getAbsolutePath();
             }
 
@@ -159,7 +165,8 @@ public class PaintPresenter implements IPaint.Presenter {
 
         @Override
         protected String doInBackground(Void... params) {
-            return saveCanvasInFile(mFileUrl, mSignNumber);
+            recordedState = saveCanvasInFile(mFileUrl, mSignNumber);
+            return mPathToFile;
         }
 
         @Override
@@ -168,10 +175,10 @@ public class PaintPresenter implements IPaint.Presenter {
             mView.hideProgressBar();
         }
 
-        private String saveCanvasInFile(String fileUrl, int signNumber) {
+        private int saveCanvasInFile(String fileUrl, int signNumber) {
             fileUrl += "/" + UUID.randomUUID().toString() + ".png";
             if (mIsEventListEmpty && signNumber == 0) {
-                return "";
+                return Constants.KEY_SIGN_CLEAR;
             } else
                 try {
                     File img = new File(fileUrl);
@@ -179,12 +186,12 @@ public class PaintPresenter implements IPaint.Presenter {
                         FileOutputStream out = new FileOutputStream(img);
                         Bitmap bitmap = mCanvasBitMap;
                         bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                        return fileUrl;
+                        mPathToFile = fileUrl;
+                        return Constants.KEY_SIGN_RECORDER;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            return "Ops! Problem with writing to storage!";
+                    Log.d(TAG, "saveCanvasInFile: Ops! Problem with writing to storage!");                }
+            return Constants.KEY_SIGN_NOT_RECORDER;
         }
     }
 }

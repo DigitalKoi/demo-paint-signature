@@ -28,4 +28,9 @@ public class Constants {
     public static final String EXTRA_KEY_PAINT_SIGN = "key.launch.number.sign";
 
     public static final String KEY_SIGN_NUMBER = "key.sign.number";
+
+    public static final int KEY_SIGN_CLEAR = 0;
+    public static final int KEY_SIGN_RECORDER = 1;
+    public static final int KEY_SIGN_NOT_RECORDER = 2;
+
 }

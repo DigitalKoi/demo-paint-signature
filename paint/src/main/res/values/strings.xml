@@ -17,7 +17,10 @@
     <string name="test_spouses">Test Spouse</string>
     <string name="residing_in">Residing in:</string>
     <string name="date">Date:</string>
+    <string name="sign_st_tv">______________</string>
 
 
     <string name="not_saved_sign">Ops! Not saved signature!</string>
+    <string name="sign_is_clear">Please write signature</string>
+
 </resources>

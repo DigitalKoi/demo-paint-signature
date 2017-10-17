@@ -14,10 +14,7 @@ import android.view.View;
 
 import com.koidev.paint.data.ParsableHelper;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * @author KoiDev
@@ -60,11 +57,10 @@ public class PaintView extends View {
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
-
-        canvasPaint = new Paint(Paint.DITHER_FLAG);
-
         brushSize = 14;
         drawPaint.setStrokeWidth(brushSize);
+        canvasPaint = new Paint(Paint.DITHER_FLAG);
+
     }
 
     @Override
@@ -153,23 +149,12 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public String saveCanvasInFile(String fileUrl, int signNumber) {
-        fileUrl += "/" + UUID.randomUUID().toString() + ".png";
-        if (eventList.isEmpty() && signNumber == 0) {
-            return "";
-        } else
-            try {
-                File img = new File(fileUrl);
-                if (img.createNewFile()) {
-                    FileOutputStream out = new FileOutputStream(img);
-                    Bitmap bitmap = canvasBitmap;
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-                    return fileUrl;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return "Ops! Problem with writing to storage!";
+    public boolean isEventListEmpty() {
+        return eventList == null || eventList.isEmpty();
+    }
+
+    public Bitmap getCanvasBitmap(){
+        return canvasBitmap;
     }
 
     @Override

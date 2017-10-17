@@ -11,16 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 
 public class PdfActivity extends AppCompatActivity {
-
-    public static final String KEY_APP_THEME_RES_ID = "key.app.theme.res.id";
-    public static final String KEY_APPBAR_TITLE_RES_ID = "key.app.title.res.id";
-    public static final String KEY_APPBAR_HOME_ICON_RES_ID = "key.app.home.icon.res.id";
-    public static final String KEY_TEXT_FORM_ID = "key.app.textform.id";
-    public static final String KEY_TEXT_USERS = "key.app.user";
-    public static final String KEY_TEXT_SPOUSES = "key.app.spouse";
 
     private
     @StyleRes
@@ -41,45 +35,46 @@ public class PdfActivity extends AppCompatActivity {
         gettingViewStyle();
         setContentView(R.layout.activity_pdf);
         initView();
-        initFragment();
+        if (savedInstanceState == null) {
+            initFragment();
+        }
     }
 
     private void initFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         PdfFragment pdfFragment = PdfFragment.newInstance(stTextForm, stNameUsers, stNameSpouses);
-        ft.add(R.id.container_pdf, pdfFragment);
-        ft.commit();
+        ft.add(R.id.container_pdf, pdfFragment).commit();
     }
 
     private void gettingViewStyle() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             //get Theme resources id
-            if (extras.containsKey(KEY_APP_THEME_RES_ID)) {
-                mThemeId = extras.getInt(KEY_APP_THEME_RES_ID, 0);
+            if (extras.containsKey(Constants.KEY_APP_THEME_RES_ID)) {
+                mThemeId = extras.getInt(Constants.KEY_APP_THEME_RES_ID, 0);
                 if (mThemeId > 0) {
                     setTheme(mThemeId);
                 }
             }
             //get appbar title
-            if (extras.containsKey(KEY_APPBAR_TITLE_RES_ID)) {
-                mAppbarTitleResId = extras.getInt(KEY_APPBAR_TITLE_RES_ID, 0);
+            if (extras.containsKey(Constants.KEY_APPBAR_TITLE_RES_ID)) {
+                mAppbarTitleResId = extras.getInt(Constants.KEY_APPBAR_TITLE_RES_ID, 0);
             }
             //get home as up indicator icon
-            if (extras.containsKey(KEY_APPBAR_HOME_ICON_RES_ID)) {
-                mAppbarHomeIconResId = extras.getInt(KEY_APPBAR_HOME_ICON_RES_ID, 0);
+            if (extras.containsKey(Constants.KEY_APPBAR_HOME_ICON_RES_ID)) {
+                mAppbarHomeIconResId = extras.getInt(Constants.KEY_APPBAR_HOME_ICON_RES_ID, 0);
             }
             //get text for text form
-            if (extras.containsKey(KEY_TEXT_FORM_ID)) {
-                stTextForm = extras.getString(KEY_TEXT_FORM_ID);
+            if (extras.containsKey(Constants.KEY_TEXT_FORM_ID)) {
+                stTextForm = extras.getString(Constants.KEY_TEXT_FORM_ID);
             }
               //get name Users
-            if (extras.containsKey(KEY_TEXT_USERS)) {
-                stNameUsers = extras.getString(KEY_TEXT_USERS);
+            if (extras.containsKey(Constants.KEY_TEXT_USERS)) {
+                stNameUsers = extras.getString(Constants.KEY_TEXT_USERS);
             }
             //get name Spouse's
-            if (extras.containsKey(KEY_TEXT_SPOUSES)) {
-                stNameSpouses = extras.getString(KEY_TEXT_SPOUSES);
+            if (extras.containsKey(Constants.KEY_TEXT_SPOUSES)) {
+                stNameSpouses = extras.getString(Constants.KEY_TEXT_SPOUSES);
             }
 
         }
@@ -103,10 +98,8 @@ public class PdfActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
                 super.onActivityResult(requestCode, resultCode, data);
                 for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                     fragment.onActivityResult(requestCode, resultCode, data);

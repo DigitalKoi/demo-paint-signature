@@ -1,8 +1,6 @@
 package com.koidev.paint.view.paint;
 
 
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.presenter.IPaint;
 import com.koidev.paint.presenter.PaintPresenter;
@@ -28,28 +27,29 @@ import com.koidev.paint.presenter.PaintPresenter;
  */
 public class PaintFragment extends Fragment implements IPaint.View {
 
-    private ProgressBar mProgressBar;
-    private static PaintFragment mFragment;
-    private static int mSignNumber;
     private IPaint.Presenter mPresenter;
+    private ProgressBar mProgressBar;
     private PaintView mPaintView;
+    private int mSignNumber;
 
 
     public static PaintFragment newInstance(int signNumber) {
-        mSignNumber = signNumber;
-        if (mFragment == null) {
-            mFragment = new PaintFragment();
-        }
-        return mFragment;
+        PaintFragment fragment = new PaintFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.KEY_SIGN_NUMBER, signNumber);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        mPresenter = new PaintPresenter(getActivity().getApplicationContext(), this);
+        if (getArguments() != null) {
+            mSignNumber = getArguments().getInt(Constants.KEY_SIGN_NUMBER);
+        }
+        mPresenter = new PaintPresenter(this);
     }
 
     @Override
@@ -87,32 +87,6 @@ public class PaintFragment extends Fragment implements IPaint.View {
         }
     }
 
-    private void clearCanvas() {
-        mPresenter.clearCanvasView(mPaintView);
-    }
-
-    private void saveCanvas() {
-        mProgressBar.setVisibility(View.VISIBLE);
-        final String[] path = {""};
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    path[0] = mPresenter.saveSignature(mPaintView, mSignNumber);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return path[0];
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                mProgressBar.setVisibility(View.GONE);
-                mPresenter.sendSignature(result, mSignNumber);
-            }
-        }.execute();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_paint, menu);
@@ -124,16 +98,14 @@ public class PaintFragment extends Fragment implements IPaint.View {
         int i = item.getItemId();
         if (i == android.R.id.home) {
             getActivity().onBackPressed();
-        }
-        if (i == R.id.action_select_save) {
-            saveCanvas();
+        } else if (i == R.id.action_select_save) {
+            mPresenter.saveSignature(mSignNumber);
             return true;
         } else if (i == R.id.action_select_clear) {
-            clearCanvas();
-            return true;
-        } else {
+            mPresenter.clearCanvasView(mPaintView);
             return true;
         }
+        return false;
     }
 
     @Override
@@ -147,4 +119,18 @@ public class PaintFragment extends Fragment implements IPaint.View {
                 message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void showProgressBar() {
+        if (mProgressBar != null) mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public PaintView getPaintView() {
+        return mPaintView;
+    }
 }

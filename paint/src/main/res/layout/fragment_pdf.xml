@@ -10,13 +10,19 @@
     tools:context="com.koidev.paint.view.pdf.PdfFragment">
 
     <ScrollView
+        android:id="@+id/scroll_view_pdf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+    >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
         >
 
             <TextView
@@ -78,7 +84,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/sign1_text_tv_pdf"
-                android:text="______________"
+                android:text="@string/sign_st_tv"
                 android:elevation="2dp"
                 android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="@+id/sign1_text_tv_pdf"
@@ -149,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
-                android:text="______________"
+                android:text="@string/sign_st_tv"
                 android:elevation="2dp"
                 android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="@+id/sign2_text_tv_pdf"

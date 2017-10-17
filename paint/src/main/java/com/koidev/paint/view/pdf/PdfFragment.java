@@ -16,52 +16,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.presenter.IPdf;
 import com.koidev.paint.presenter.PdfPresenter;
 
 import java.io.File;
 
-import static com.koidev.paint.presenter.PaintPresenter.REQUEST_CODE_PAINT;
-import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
-import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
+import static com.koidev.paint.Constants.KEY_SIGN_SECOND;
+import static com.koidev.paint.Constants.KEY_TEXT_FORM_ID;
+import static com.koidev.paint.Constants.KEY_TEXT_SPOUSES;
+import static com.koidev.paint.Constants.KEY_TEXT_USERS;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class PdfFragment extends Fragment implements IPdf.View {
-
-    public static final int KEY_SIGN_FIRST = 0;
-    public static final int KEY_SIGN_SECOND = 1;
-    private static PdfFragment mFragment;
     private static String mTextForm;
     private static String mUsersName;
     private static String mSpousesName;
     private IPdf.Presenter mPresenter;
 
-    private ImageView signNameImg;
-    private ImageView signSpouseImg;
+    private ImageView signNamesImg;
+    private ImageView signSpousesImg;
+    private String signNamesImgPath;
+    private String signSpousesImgPath;
     private ProgressBar progressBar;
+    private ScrollView mScrollView;
 
     public static PdfFragment newInstance(String textForm, String usersName, String spousesName) {
-        mTextForm = textForm;
-        mUsersName = usersName;
-        mSpousesName = spousesName;
-        if (mFragment == null) {
-            mFragment = new PdfFragment();
-        }
+        PdfFragment mFragment = new PdfFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.KEY_TEXT_FORM_ID, textForm);
+        args.putString(Constants.KEY_TEXT_USERS, usersName);
+        args.putString(Constants.KEY_TEXT_SPOUSES, spousesName);
+        mFragment.setArguments(args);
         return mFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        if (getArguments() != null) {
+            mTextForm = getArguments().getString(KEY_TEXT_FORM_ID);
+            mUsersName = getArguments().getString(KEY_TEXT_USERS);
+            mSpousesName = getArguments().getString(KEY_TEXT_SPOUSES);
+        }
         mPresenter = new PdfPresenter(getActivity().getApplicationContext(), this);
     }
 
@@ -76,8 +82,9 @@ public class PdfFragment extends Fragment implements IPdf.View {
     }
 
     private void initViews(View view) {
-        signNameImg = (ImageView) view.findViewById(R.id.sign1_im_pdf);
-        signSpouseImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
+        mScrollView = (ScrollView) view.findViewById(R.id.scroll_view_pdf);
+        signNamesImg = (ImageView) view.findViewById(R.id.sign1_im_pdf);
+        signSpousesImg = (ImageView) view.findViewById(R.id.sign2_im_pdf);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar_pdf);
 
@@ -98,7 +105,7 @@ public class PdfFragment extends Fragment implements IPdf.View {
         tvSing1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.callPaintActivity(KEY_SIGN_FIRST);
+                mPresenter.callPaintActivity(Constants.KEY_SIGN_FIRST);
             }
         });
         TextView tvSing2 = (TextView) view.findViewById(R.id.sign2_ed_tv_pdf);
@@ -146,11 +153,11 @@ public class PdfFragment extends Fragment implements IPdf.View {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_PAINT:
+            case Constants.REQUEST_CODE_PAINT:
                 if (resultCode == Activity.RESULT_OK) {
                     Bundle extras = data.getExtras();
-                    String fileUrl = extras.getString(EXTRA_KEY_SELECTED_FILE_URL);
-                    int signNumber = extras.getInt(EXTRA_KEY_PAINT_SIGN);
+                    String fileUrl = extras.getString(Constants.EXTRA_KEY_SELECTED_FILE_URL);
+                    int signNumber = extras.getInt(Constants.EXTRA_KEY_PAINT_SIGN);
 
                     showSignInImageView(fileUrl, signNumber);
                     mPresenter.setSignature(fileUrl, signNumber);
@@ -168,13 +175,13 @@ public class PdfFragment extends Fragment implements IPdf.View {
         int wh = 150;
         Bitmap bm = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
         if (signNumber < 1) {
-//            signNameImg.setAlpha((float) 0.5);
-            signNameImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+            signNamesImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+            signNamesImgPath = fileUrl;
 
         } else {
-//            signSpouseImg.setAlpha((float) 0.5);
             if (bm != null)
-                signSpouseImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+                signSpousesImg.setImageBitmap(Bitmap.createScaledBitmap(bm, wh, wh, false));
+            signSpousesImgPath = fileUrl;
         }
     }
 
@@ -187,5 +194,31 @@ public class PdfFragment extends Fragment implements IPdf.View {
     @Override
     public void showProgressBar(int visible) {
         progressBar.setVisibility(visible);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(Constants.KEY_NAMES_SIGN, signNamesImgPath);
+        outState.putString(Constants.KEY_SPOUSES_SIGN, signSpousesImgPath);
+        outState.putIntArray(Constants.ARTICLE_SCROLL_POSITION, new int[] {mScrollView.getScrollX(), mScrollView.getScrollY()});
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getString(Constants.KEY_NAMES_SIGN) != null)
+                showSignInImageView(savedInstanceState.getString(Constants.KEY_NAMES_SIGN), 0);
+            if (savedInstanceState.getString(Constants.KEY_SPOUSES_SIGN) != null)
+                showSignInImageView(savedInstanceState.getString(Constants.KEY_SPOUSES_SIGN), 1);
+
+            final int [] xy = savedInstanceState.getIntArray("ARTICLE_SCROLL_POSITION");
+            if (xy != null) {
+                mScrollView.post(new Runnable() {
+                    public void run() { mScrollView.scrollTo(xy[0], xy[1]); }
+                });
+            }
+        }
+        super.onActivityCreated(savedInstanceState);
     }
 }

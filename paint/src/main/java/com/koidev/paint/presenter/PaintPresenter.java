@@ -2,21 +2,29 @@ package com.koidev.paint.presenter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
+import com.koidev.paint.Constants;
 import com.koidev.paint.R;
 import com.koidev.paint.view.paint.PaintView;
 
-import static com.koidev.paint.presenter.PdfPresenter.EXTRA_KEY_PAINT_SIGN;
-import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_URL;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
+import static com.koidev.paint.R.string.not_saved_sign;
+import static com.koidev.paint.R.string.sign_is_clear;
 
 /**
  * @author KoiDev
@@ -25,14 +33,12 @@ import static com.koidev.paint.view.paint.PaintActivity.EXTRA_KEY_SELECTED_FILE_
 
 public class PaintPresenter implements IPaint.Presenter {
 
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 10001;
-    public static final int REQUEST_CODE_PAINT = 1001;
-    private Context mContext;
     private IPaint.View mView;
+    private String mPathToFile;
+    private int recordedState;
 
-    public PaintPresenter(Context context, IPaint.View view) {
+    public PaintPresenter(IPaint.View view) {
         mView = view;
-        mContext = context;
     }
 
     @Override
@@ -42,9 +48,9 @@ public class PaintPresenter implements IPaint.Presenter {
 
     private void onSelectSignature(String fileUrl, int signNumber) {
         Activity activity = mView.getActivity();
-        Intent intent = new Intent(String.valueOf(REQUEST_CODE_PAINT));
-        intent.putExtra(EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
-        intent.putExtra(EXTRA_KEY_PAINT_SIGN, signNumber);
+        Intent intent = new Intent(String.valueOf(Constants.REQUEST_CODE_PAINT));
+        intent.putExtra(Constants.EXTRA_KEY_SELECTED_FILE_URL, fileUrl);
+        intent.putExtra(Constants.EXTRA_KEY_PAINT_SIGN, signNumber);
         activity.setResult(Activity.RESULT_OK, intent);
         activity.finish();
     }
@@ -52,7 +58,7 @@ public class PaintPresenter implements IPaint.Presenter {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_STORAGE_PERMISSION:
+            case Constants.REQUEST_CODE_STORAGE_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     onStartView();
                 } else {
@@ -63,15 +69,10 @@ public class PaintPresenter implements IPaint.Presenter {
     }
 
     @Override
-    public String saveSignature(PaintView paintView, int signNumber) {
-        String fileUrl = mContext.getExternalFilesDir("").getAbsolutePath();
+    public void saveSignature(final int signNumber) {
+        if (!checkDeviceStoragePermission()) return;
 
-        if (checkDeviceStoragePermission()) {
-            return paintView.saveCanvasInFile(fileUrl, signNumber);
-
-        } else {
-            return "Not permission for write file";
-        }
+        new SavePaintAsync(signNumber).execute();
     }
 
     @Override
@@ -81,11 +82,11 @@ public class PaintPresenter implements IPaint.Presenter {
 
     @Override
     public void sendSignature(String result, int mSignNumber) {
-        if (result.equals("Ops! Problem with writing to storage!")) {
-            mView.showToast(result);
-        } else if (result.equals("") && mSignNumber == 0) {
-            mView.showToast("Please write signature");
-        } else {
+        if (recordedState == Constants.KEY_SIGN_NOT_RECORDER) {
+            mView.showToast(mView.getActivity().getResources().getString(not_saved_sign));
+        } else if (recordedState == Constants.KEY_SIGN_CLEAR) {
+            mView.showToast(mView.getActivity().getResources().getString(sign_is_clear));
+        } else if (recordedState == Constants.KEY_SIGN_RECORDER){
             onSelectSignature(result, mSignNumber);
         }
     }
@@ -117,7 +118,7 @@ public class PaintPresenter implements IPaint.Presenter {
                                         new String[]{
                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                                         },
-                                        REQUEST_CODE_STORAGE_PERMISSION
+                                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                                 );
                             }
                         })
@@ -128,10 +129,69 @@ public class PaintPresenter implements IPaint.Presenter {
                         new String[]{
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
-                        REQUEST_CODE_STORAGE_PERMISSION
+                        Constants.REQUEST_CODE_STORAGE_PERMISSION
                 );
             }
         }
         return isAccessAllowed;
+    }
+
+
+    private class SavePaintAsync extends AsyncTask<Void, Void, String> {
+
+        private boolean mIsEventListEmpty;
+        private int mSignNumber;
+        private String mFileUrl;
+        private Bitmap mCanvasBitMap;
+
+        SavePaintAsync(int signNumber) {
+            mSignNumber = signNumber;
+
+            File file = mView.getActivity().getExternalFilesDir("");
+            if (file != null) {
+                if (!file.exists()) file.mkdir();
+                mFileUrl = file.getAbsolutePath();
+            }
+
+            PaintView paintView = mView.getPaintView();
+            mIsEventListEmpty = paintView.isEventListEmpty();
+            mCanvasBitMap = paintView.getCanvasBitmap();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mView.showProgressBar();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            recordedState = saveCanvasInFile(mFileUrl, mSignNumber);
+            return mPathToFile;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            sendSignature(result, mSignNumber);
+            mView.hideProgressBar();
+        }
+
+        private int saveCanvasInFile(String fileUrl, int signNumber) {
+            fileUrl += "/" + UUID.randomUUID().toString() + ".png";
+            if (mIsEventListEmpty && signNumber == 0) {
+                return Constants.KEY_SIGN_CLEAR;
+            } else
+                try {
+                    File img = new File(fileUrl);
+                    if (img.createNewFile()) {
+                        FileOutputStream out = new FileOutputStream(img);
+                        Bitmap bitmap = mCanvasBitMap;
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+                        mPathToFile = fileUrl;
+                        return Constants.KEY_SIGN_RECORDER;
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, "saveCanvasInFile: Ops! Problem with writing to storage!");                }
+            return Constants.KEY_SIGN_NOT_RECORDER;
+        }
     }
 }

@@ -15,7 +15,7 @@ import com.koidev.paint.data.PdfManager;
 
 import butterknife.BindView;
 
-import static com.koidev.paint.data.PdfManager.REQUEST_CODE_PDF;
+import static com.koidev.paint.Constants.REQUEST_CODE_PDF;
 
 public class MainActivity extends AppCompatActivity {
 
